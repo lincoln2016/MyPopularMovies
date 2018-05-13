@@ -1,4 +1,3 @@
-
 <!--
   ~ PROJECT LICENSE
   ~ This project was submitted by Henry Ayers as part of the Nanodegree At Udacity.
@@ -32,5 +31,9 @@
     <string name="popular_movies">Popular Movies</string>
     <string name="top_rated">Top Rated</string>
     <string name="about">About</string>
+    <string name="TitlePopularMovies">Popular Movies</string>
+    <string name="themoviedb_sort_by_popular">popular</string>
+    <string name="average_user_rating">Average user rating</string>
+    <string name="about_app_message">MyPopularMovie Application    version 1.0   Copyright (c) 2018 Henry Ayers.  All rights reserved.   MyPopularMovie uses themoviedb.org API for all movie data, for more information, contact henry@shrekware.com</string>
 
 </resources>

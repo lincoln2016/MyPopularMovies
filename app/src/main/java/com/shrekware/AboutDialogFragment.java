@@ -31,12 +31,14 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.shrekware.mypopularmovies.MovieDetailActivity;
 import com.shrekware.mypopularmovies.R;
 
 public class AboutDialogFragment extends DialogFragment
@@ -51,20 +53,15 @@ public class AboutDialogFragment extends DialogFragment
        // ImageView myImage = (ImageView)imageView.findViewById(R.id.imageView) ;
 
      //  myImage.setBackgroundColor(Color.rgb(1,210,119));
-        builder.setMessage("MyPopularMovie Application\n   version 1.0\n\n " +
-                "Copyright (c) 2018 Henry Ayers.\n All rights reserved.\n\n" +
-                "MyPopularMovie uses themoviedb.org API for all movie data, for more information, contact henry@shrekware.com\n\n")
+        builder.setMessage(R.string.about_app_message)
                 .setView(imageView)
-
+                //adds ok button, really just to make people feel better
+                // so they can click something to get rid of alert
                 .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id)
                     {
-                        // if the ok button iis clicked
-                    }
-                }
-
-
-                );
+                        // if the ok button is clicked
+      }}  );
 
         // Create the AlertDialog object and return it
         return builder.create();

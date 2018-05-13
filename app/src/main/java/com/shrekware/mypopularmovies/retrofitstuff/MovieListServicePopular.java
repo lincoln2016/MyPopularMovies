@@ -45,9 +45,24 @@ public interface MovieListServicePopular
        // the request method and relative URL.
        // There are five built-in annotations:
        // GET, POST, PUT, DELETE, and HEAD.
+/*
        @GET("/3/discover/movie")
+
        // the method Call the Retrofit client will use to return the MOST POPULAR movie list from theMovieDB.org
        Call<MovieListRetrofitObject> getAllMovies(@Query("api_key") String api_key, @Query("language") String language, @Query("sort_by") String sort_by,
                                                   @Query("include_adult")String include_adult, @Query("include_video") String include_video,
                                                   @Query("page") String page);
+*/
+       @GET("/3/movie/popular")
+       Call<MovieListRetrofitObject> getPopularMovies(@Query("api_key") String api_key);
+
+       @GET("/3/movie/top_rated")
+       Call<MovieListRetrofitObject> getTopRatedMovies(@Query("api_key") String api_key);
+
+
+
+
+
+
+
 }

@@ -47,12 +47,13 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
     // get an int for the movieDetail object
     private List<MovieDetailsRetrofitObject> myListOfMovies;
     private ImageView image;
-
+    final private MovieListAdapterOnClickHandler myOnClickHandler;
     /**
      * Constructor using the context and the item count
      */
-public MovieListAdapter(List<MovieDetailsRetrofitObject> myList, int itemNumber,Context context){
+public MovieListAdapter(List<MovieDetailsRetrofitObject> myList, MovieListAdapterOnClickHandler clickhandler,Context context){
     myListOfMovies = myList;
+    myOnClickHandler = clickhandler;
 }
     @Override
     public MovieListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
@@ -72,7 +73,7 @@ public MovieListAdapter(List<MovieDetailsRetrofitObject> myList, int itemNumber,
         // get a reference to the viewHHolder
        image = holder.itemView.findViewById(R.id.movie_imageView);
         MovieDetailsRetrofitObject myMovie = myListOfMovies.get(position);
-        Log.v("MovieListAdapter","title: "+ myMovie.getTitle());
+
 
       Log.v("MovieListAdapter", "movie poster path: " +myMovie.getPosterPath());
         //you will need a ‘size’, which will be one of the following:
@@ -113,7 +114,7 @@ public MovieListAdapter(List<MovieDetailsRetrofitObject> myList, int itemNumber,
      * Inner class to hold the views needed to display a movie item view in the recycler-view
      */
 
-    public class  ViewHolder extends RecyclerView.ViewHolder
+    public class  ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         // Will display the image of the movie
 
@@ -127,9 +128,32 @@ public MovieListAdapter(List<MovieDetailsRetrofitObject> myList, int itemNumber,
         {
             super(view);
             image= view.findViewById(R.id.movie_imageView);
+            view.setOnClickListener(this);
+        }
+        @Override
+        public void onClick(View v) {
 
+           MovieDetailsRetrofitObject myMovie = myListOfMovies.get(getAdapterPosition());
+           myOnClickHandler.onClick(myMovie);
         }
 
+
+
     }
+    /**
+     * The interface that receives onClick messages.
+     */
+    public interface MovieListAdapterOnClickHandler {
+        void onClick(MovieDetailsRetrofitObject movie);
+    }
+    /**
+     * This gets called by the child views during a click. We fetch the movie that has been
+     * selected, and then call the onClick handler registered with this adapter, passing that
+     * movie object.
+     *
+     * @param v the View that was clicked
+     */
+
+
 }
 
