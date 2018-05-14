@@ -27,21 +27,17 @@
 package com.shrekware.mypopularmovies;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
-import com.shrekware.mypopularmovies.retrofitstuff.MovieDetailsRetrofitObject;
 import com.squareup.picasso.Picasso;
 
+import java.util.Objects;
 
 public class MovieDetailActivity extends AppCompatActivity {
     private ImageView image;
-    private TextView movieOverview, releaseDate,movieTitle;
     private RatingBar ratingBar;
     private Intent intent;
 
@@ -49,47 +45,55 @@ public class MovieDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
-      intent = getIntent();
-
+        intent = getIntent();
+        String mTitle = intent.getStringExtra("title");
+        // sets the title bar to the text string in strings.xml plus movie title
+       // Objects.requireNonNull(getSupportActionBar()).setTitle(mTitle);
+        Objects.requireNonNull(getSupportActionBar()).hide();
+        //imageView for the movie poster
         image = findViewById(R.id.image_movie_detail);
-        movieTitle = findViewById(R.id.tv_movie_title);
-        movieOverview = findViewById(R.id.tv_movie_overview);
-        releaseDate = findViewById(R.id.tv_release_date);
+
+        TextView movieTitle = findViewById(R.id.tv_movie_title);
+        //textView for the movie overview(description)
+        TextView movieOverview = findViewById(R.id.tv_movie_overview);
+        //textView for the movie release date
+        TextView releaseDate = findViewById(R.id.tv_release_date);
+        // a 10 star - view only rating bar
         ratingBar = findViewById(R.id.ratingBar);
-        int rating = intent.getIntExtra("rating", 0);
+        // sets the ratting stars value
         setStars();
+        // sets te poster path to image
+        setImage();
+
+        movieTitle.setText(intent.getStringExtra("title"));
+
+        movieOverview.setText(intent.getStringExtra("overview"));
+        String rDate = "Release Date: "+intent.getStringExtra("release_date");
+        releaseDate.setText(rDate);
+    }
+
+    public void setImage()
+    {
+        // string to get the poster path from the movie object
         String Poster = intent.getStringExtra("posterpath");
-        final String imageSize = "w185/";
+        // you will need a ‘size’, which will be one of the following:
+        // "w92", "w154", "w185", "w342", "w500", "w780",
+        // or "original". For most phones we recommend using “w185”
+        final String imageSize = "w342/";
+        //the complete poster path for Picasso to use
         final String PosterPath = "http://image.tmdb.org/t/p/"+ imageSize + Poster;
-        Log.v("MovieDetailActivity", "movie poster path: " +  PosterPath);
-        Log.v("MovieDetailActivity", "rating " +  rating);
-        Picasso.get().load(PosterPath).placeholder(R.drawable.ic_launcher_foreground).into(image);
-         movieTitle.setText(intent.getStringExtra("title"));
-         movieOverview.setText(intent.getStringExtra("overview"));
-         String rDate = "Release Date: "+intent.getStringExtra("release_date");
-         releaseDate.setText(rDate);
-
-
-
-
-    }
-    public void setStars(){
-        int rating = intent.getIntExtra("rating", 0);
-        if(rating < 10000){
-           rating = (10*rating)/10000;
-
-            ratingBar.setRating(rating);
-            Log.v("MovieDetailActivity", "SETSTARS rating " +  rating);
-        }
-
-
+        //ask Picasso to do the heavy lifting, getting the pictures and load them into image
+//        Picasso.get().load(PosterPath).placeholder(R.drawable.ic_launcher_foreground).fit().into(image);
+        Picasso.get().load(PosterPath).placeholder(R.mipmap.ic_launcher).fit().into(image);
     }
 
-
-
+    public void setStars()
+    {
+        //get rating from intent, which was acquired by the movie object
+        //the vote_average from the movie object
+        double rating = intent.getDoubleExtra("rating", 0);
+        // setting te amount of stars per rating, most of the work
+        // here is done in the activity_movie_detail.xml file
+        ratingBar.setRating((float) rating);
+    }
 }
-       //   intent.putExtra("title", movie.getTitle());
-       //           intent.putExtra("overview", movie.getOverview());
-        //          intent.putExtra("posterpath", movie.getPosterPath());
-        //          intent.putExtra("release_date", movie.getReleaseDate());
-         //         intent.putExtra("rating", movie.getVoteCount());

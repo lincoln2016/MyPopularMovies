@@ -29,7 +29,6 @@ package com.shrekware.mypopularmovies;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,79 +36,67 @@ import android.widget.ImageView;
 import com.shrekware.mypopularmovies.retrofitstuff.MovieDetailsRetrofitObject;
 import com.squareup.picasso.Picasso;
 import java.util.List;
-
 /**
- * this class is for the adapter layout that the recycler view uses to inflate each position
+ * this class is for the adapter layout that the recyclerView uses to inflate each position
  */
-
 public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.ViewHolder>
 {
-    // get an int for the movieDetail object
-    private List<MovieDetailsRetrofitObject> myListOfMovies;
-    private ImageView image;
-    final private MovieListAdapterOnClickHandler myOnClickHandler;
-    /**
-     * Constructor using the context and the item count
-     */
-public MovieListAdapter(List<MovieDetailsRetrofitObject> myList, MovieListAdapterOnClickHandler clickhandler,Context context){
-    myListOfMovies = myList;
-    myOnClickHandler = clickhandler;
-}
+   // get an int for the movieDetail object
+   private List<MovieDetailsRetrofitObject> myListOfMovies;
+   private ImageView image;
+   final private MovieListAdapterOnClickHandler myOnClickHandler;
+   /**
+   * Constructor using the context and the item count
+   */
+    public MovieListAdapter(List<MovieDetailsRetrofitObject> myList, MovieListAdapterOnClickHandler clickhandler,Context context)
+    {
+       myListOfMovies = myList;
+       myOnClickHandler = clickhandler;
+    }
+    @NonNull
     @Override
-    public MovieListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public MovieListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
      //  myListOfMovies.clear();
          Context context = parent.getContext();
          // Get the RecyclerView item layout
          LayoutInflater inflater = LayoutInflater.from(context);
          View view = inflater.inflate(R.layout.movie_item_layout, parent,false);
-         ViewHolder vHolder = new ViewHolder(view);
-         return vHolder;
+         return new ViewHolder(view);
     }
-
-
     @Override
-    public void onBindViewHolder(@NonNull MovieListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position)
+    {
         // get a reference to the viewHHolder
-       image = holder.itemView.findViewById(R.id.movie_imageView);
+        image = holder.itemView.findViewById(R.id.movie_imageView);
         MovieDetailsRetrofitObject myMovie = myListOfMovies.get(position);
-
-
-      Log.v("MovieListAdapter", "movie poster path: " +myMovie.getPosterPath());
         //you will need a ‘size’, which will be one of the following:
         //"w92", "w154", "w185", "w342", "w500", "w780",
         // or "original". For most phones we recommend using “w185”
         final String imageSize = "w185/";
-
         final String PosterPath = "http://image.tmdb.org/t/p/"+ imageSize + myMovie.getPosterPath();
-
-        Log.v("MovieListAdapter", "movie poster path: " +  PosterPath);
-
-       Picasso.get().load(PosterPath).placeholder(R.drawable.ic_launcher_foreground).into(image);
-
+        Picasso.get().load(PosterPath).placeholder(R.mipmap.ic_launcher).fit().into(image);
+        // didnt work on lollipop  no fit??
+        // Picasso.get().load(PosterPath).placeholder(R.drawable.ic_launcher_foreground).into(image);
     }
-
+       //must have, to keep track of size of list
     @Override
     public int getItemCount()
     {
         if(myListOfMovies != null){
-            Log.v("MovieListAdapter", "Size of list  "+myListOfMovies.size() );
             return myListOfMovies.size();
         }
         return 0;
     }
-
-
+    //must have to reset the list to 0
     public void reset()
     {
       // TODO   set
         if(myListOfMovies!= null)
-        {  myListOfMovies.clear();
-         Log.v("MovieListAdapter", "my list of move size "+myListOfMovies.size());}
-
+        {
+            myListOfMovies.clear();
+        }
     }
-
-
     /**
      * Inner class to hold the views needed to display a movie item view in the recycler-view
      */
@@ -127,13 +114,16 @@ public MovieListAdapter(List<MovieDetailsRetrofitObject> myList, MovieListAdapte
         public ViewHolder(View view)
         {
             super(view);
-            image= view.findViewById(R.id.movie_imageView);
+            //the image for the recyclerView
+            image = view.findViewById(R.id.movie_imageView);
+            // sets a listener for a click, which implements onClick below
             view.setOnClickListener(this);
         }
-        @Override
-        public void onClick(View v) {
 
-           MovieDetailsRetrofitObject myMovie = myListOfMovies.get(getAdapterPosition());
+        @Override
+        public void onClick(View v)
+        {
+            MovieDetailsRetrofitObject myMovie = myListOfMovies.get(getAdapterPosition());
            myOnClickHandler.onClick(myMovie);
         }
 
@@ -146,12 +136,11 @@ public MovieListAdapter(List<MovieDetailsRetrofitObject> myList, MovieListAdapte
     public interface MovieListAdapterOnClickHandler {
         void onClick(MovieDetailsRetrofitObject movie);
     }
-    /**
+    /*
      * This gets called by the child views during a click. We fetch the movie that has been
      * selected, and then call the onClick handler registered with this adapter, passing that
      * movie object.
      *
-     * @param v the View that was clicked
      */
 
 

@@ -33,7 +33,6 @@ import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -54,7 +53,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements MovieListAdapter.MovieListAdapterOnClickHandler
-{   // the api key from themoviebd, it can be found in the values/strings.xml file
+{
+    // the api key from themoviebd, it can be found in the values/strings.xml file
     private String API_KEY;
     // the results of the retrofit call to the movie db
     private List<MovieDetailsRetrofitObject> resultsList;
@@ -64,44 +64,53 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     // the instructions on how to populate the movie item layout
     public MovieListAdapter mAdapter;
     //allows resources access at interface
+    //TODO not sure this is needed???
     public static Resources resources;
     // a reference to the recyclerView
-    private RecyclerView movieListRecylerView;
+    private RecyclerView movieListRecyclerView;
     // app context
     private Context mContext;
     // the list of movie objects returned in the resultsList
+    // used in adapter initialization
+    //TODO is te filler needed???
     private  List<MovieDetailsRetrofitObject> listMyList;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        // load the saved state for on rotation events and reloading
         super.onCreate(savedInstanceState);
-         // set layout for this view
+        // set layout for this view
         setContentView(R.layout.activity_main);
         // changes the title of the activity to match the type of movie list returned
-        getSupportActionBar().setTitle(R.string.TitlePopularMovies);
-         mContext = this;
-       //get a reference to the system resources, used in MovieListServicePopular to access string values
+        // default is popular movies
+        getSupportActionBar().setTitle(R.string.title_popular_movies);
+        // grab a context reference for future use
+        mContext = this;
+        //get a reference to the system resources, used in MovieListServicePopular to access string values
         resources = getResources();
         // the api key you get from themoviedb to access their api
-          API_KEY = resources.getString(R.string.api_key);
+        API_KEY = resources.getString(R.string.api_key);
         // create a reference to the spinner used to indicate loading
         mProgressBar = findViewById(R.id.progressBar);
         // create a reference to recycler view widget
-        movieListRecylerView = findViewById(R.id.recyleView_movieList);
+        movieListRecyclerView = findViewById(R.id.recyleView_movieList);
         // creating the movie item adapter with the required parameters
-
         mAdapter = new MovieListAdapter(listMyList,this,mContext);
         // sets the recycler view to a grid layout with 2 columns
-        movieListRecylerView.setLayoutManager(new GridLayoutManager(this,2));
+        movieListRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
         //attaches the movie item adapter to the recycler view
-        movieListRecylerView.setAdapter(mAdapter);
+        movieListRecyclerView.setAdapter(mAdapter);
         //asks for the popular movies from the movie.db
         getMovieJson(getString(R.string.themoviedb_sort_by_popular));
   }
+  // needed to reference this on clickhandler
      public MovieListAdapter.MovieListAdapterOnClickHandler getClickhandler(){
         MovieListAdapter.MovieListAdapterOnClickHandler clickHandler = this;
         return clickHandler;
      }
+     // gets the movie info and populates te gridview based on the sort_by
+     // 2 options  Popular or Top Rated
     public void getMovieJson(String sort_by)
     {   //shows te loading indicator
         showLoading();
@@ -122,14 +131,12 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                 {
                     @Override
                   public void onResponse(Call<MovieListRetrofitObject> call, Response<MovieListRetrofitObject> response) {//TODO clear adapter on new call
-                     MovieDetailsRetrofitObject myMovie = null;
                          if (response.body() != null) {
                             showMovies();
                             resultsList = response.body().getResults();
-                          //   movieListRecylerView.setAdapter(mAdapter);
-                         movieListRecylerView.setAdapter(new MovieListAdapter(resultsList, getClickhandler(), mContext));
-                         movieListRecylerView.setVisibility(View.VISIBLE);
-                         mAdapter.notifyDataSetChanged();
+                            movieListRecyclerView.setAdapter(new MovieListAdapter(resultsList, getClickhandler(), mContext));
+                            movieListRecyclerView.setVisibility(View.VISIBLE);
+                            mAdapter.notifyDataSetChanged();
                       }
 
                         }
@@ -146,14 +153,12 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                      @Override
                      public void onResponse(Call<MovieListRetrofitObject> call, Response<MovieListRetrofitObject> response)
                      {//TODO clear adapter on new call
-                         MovieDetailsRetrofitObject myMovie = null;
                          if (response.body() != null)
                          {
                              showMovies();
                              resultsList = response.body().getResults();
-                            // movieListRecylerView.setAdapter(mAdapter);
-                        movieListRecylerView.setAdapter(new MovieListAdapter(resultsList,getClickhandler() , mContext));
-                             movieListRecylerView.setVisibility(View.VISIBLE);
+                             movieListRecyclerView.setAdapter(new MovieListAdapter(resultsList,getClickhandler() , mContext));
+                             movieListRecyclerView.setVisibility(View.VISIBLE);
                              mAdapter.notifyDataSetChanged();
                          }
                      }
@@ -177,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     private void showLoading()
     {
         //hide the movie list
-        movieListRecylerView.setVisibility(View.GONE);
+        movieListRecyclerView.setVisibility(View.GONE);
         //show the loading indicator
         mProgressBar.setVisibility(View.VISIBLE);
     }
@@ -186,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         // hide the loading indicator
         mProgressBar.setVisibility(View.GONE);
         // show the movie list
-        movieListRecylerView.setVisibility(View.VISIBLE);
+        movieListRecyclerView.setVisibility(View.VISIBLE);
     }
 
     //checks the device to see if there is a network connection
@@ -223,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         // technically a switch statement might be better
         if (id == R.id.popular_movies)
         {
-            getSupportActionBar().setTitle("Popular Movies");
+            getSupportActionBar().setTitle(R.string.title_popular_movies);
             getMovieJson("popular");
             return true;
         }
@@ -250,8 +255,9 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
           intent.putExtra("title", movie.getTitle());
           intent.putExtra("overview", movie.getOverview());
           intent.putExtra("posterpath", movie.getPosterPath());
-        intent.putExtra("release_date", movie.getReleaseDate());
-        intent.putExtra("rating", movie.getVoteCount());
+          intent.putExtra("release_date", movie.getReleaseDate());
+          intent.putExtra("rating", movie.getVoteAverage());
+
         startActivity(intent);
     }
 }

@@ -31,14 +31,9 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
-
-import com.shrekware.mypopularmovies.MovieDetailActivity;
 import com.shrekware.mypopularmovies.R;
 
 public class AboutDialogFragment extends DialogFragment

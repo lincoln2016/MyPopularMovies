@@ -26,14 +26,22 @@
 
 
 <resources>
+    <string name="title_popular_movies">Popular Movies</string>
     <string name="app_name">MyPopularMovies</string>
     <string name="api_key">Your API KEY Here</string>
-    <string name="popular_movies">Popular Movies</string>
     <string name="top_rated">Top Rated</string>
     <string name="about">About</string>
-    <string name="TitlePopularMovies">Popular Movies</string>
     <string name="themoviedb_sort_by_popular">popular</string>
     <string name="average_user_rating">Average user rating</string>
-    <string name="about_app_message">MyPopularMovie Application    version 1.0   Copyright (c) 2018 Henry Ayers.  All rights reserved.   MyPopularMovie uses themoviedb.org API for all movie data, for more information, contact henry@shrekware.com</string>
+    <string name="about_app_message">MyPopularMovie Application\n
+        version 1.0\n\n
+        Copyright  2018 Henry Ayers.\n
+        All rights reserved.\n\n
+        MyPopularMovie uses themoviedb.org API for all movie data,
+        for more information,\n contact henry@shrekware.com\n</string>
+    <string name="title_detail_movie">Movie Details</string>
+    <string name="movie_poster_image">movie poster image</string>
+    <string name="logo_powered_by_www_themoviedb_org">Powered by www.themoviedb.org</string>
+
 
 </resources>

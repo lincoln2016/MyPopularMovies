@@ -27,65 +27,62 @@
 
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.shrekware.mypopularmovies.MovieDetailActivity">
+    tools:context="com.shrekware.mypopularmovies.MovieDetailActivity"
+    >
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
+        <TextView
+            android:textAlignment="center"
+            android:layout_marginTop="16dp"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimaryDark"
+            android:id="@+id/tv_movie_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     <ImageView
+        android:layout_gravity="center"
+        android:contentDescription="@string/movie_poster_image"
         android:layout_margin="12dp"
         android:id="@+id/image_movie_detail"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@mipmap/themoviedb"
-        android:minHeight="185dp"
-
-
+        android:minWidth="120dp"
+        android:minHeight="160dp"
         />
 
-    <TextView
-
-        android:id="@+id/tv_movie_title"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimaryDark"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
 
     <TextView
         android:layout_margin="8dp"
         android:textColor="@color/colorPrimaryDark"
         android:id="@+id/tv_movie_overview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-         android:text="TextView" />
+        android:layout_height="wrap_content" />
 
     <TextView
-        android:layout_marginLeft="6dp"
+        android:layout_marginStart="6dp"
         android:textColor="@color/colorPrimaryDark"
         android:textAlignment="viewStart"
         android:id="@+id/tv_release_date"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:layout_marginTop="12dp"
-        android:layout_marginLeft="6dp"
+        android:layout_marginStart="6dp"
         android:textColor="@android:color/holo_red_dark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/average_user_rating"
         android:layout_gravity="bottom"/>
-
 
     <RatingBar
         android:layout_margin="6dp"
@@ -93,11 +90,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:numStars="10"
-        android:stepSize="1.0"
+        android:stepSize=".1"
         android:isIndicator="true"
         android:layout_gravity="bottom"
-
-       />
+        style="?android:attr/ratingBarStyleSmall" />
     </LinearLayout>
 </ScrollView>
 
