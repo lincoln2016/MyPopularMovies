@@ -44,7 +44,7 @@ public class RetrofitClient
     private static final String BASE_URL= MainActivity.resources.getString(R.string.retrofit_client_base_url);
     // create an instance of the MovieListService which sets up the call for retrofit,
     // the MovieListService includes the API_KEY
-    private MovieListService movieListService;
+   final private MovieListService movieListService;
 
   /*
   * the constructor for the Retrofit Client
@@ -55,7 +55,7 @@ public class RetrofitClient
         Retrofit retrofit = new Retrofit.Builder()
                 //adds base url to the retrofit client
                 .baseUrl(BASE_URL)
-                //adds the Gson converter to the client to interpret the response into gson notation
+                //adds the Gson converter to the client to interpret the response into Gson notation
                 .addConverterFactory(GsonConverterFactory.create())
                 //builds the retrofit client
                 .build();

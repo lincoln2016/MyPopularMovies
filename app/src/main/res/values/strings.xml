@@ -35,6 +35,7 @@
 
     <string name="movie_poster_image">movie poster image</string>
     <string name="themoviedb_sort_by_popular">popular</string>
+    <string name="themoviedb_sort_by_top_rated">top_rated</string>
     <string name="average_user_rating">Average user rating</string>
     <string name="movie_detail_release_date_string">Release Date:</string>
     <string name="log_error_message_popular_movie_call">Error on Failure of the Popular Movie Call:</string>
@@ -50,6 +51,6 @@
         MyPopularMovie uses themoviedb.org API for all movie data,
         for more information,\n contact henry@shrekware.com\n</string>
     <string name="logo_powered_by_www_themoviedb_org">Powered by www.themoviedb.org</string>
-    <string name="moviedb_base_image_url">http://image.tmdb.org/t/p/</string>
-    <string name="moviedb_image_size">w342/</string>
+    <string name="themoviedb_base_image_url">http://image.tmdb.org/t/p/</string>
+    <string name="themoviedb_image_size">w342/</string>
 </resources>

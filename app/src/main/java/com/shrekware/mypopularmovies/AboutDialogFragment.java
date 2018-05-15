@@ -26,6 +26,7 @@
 
 package com.shrekware.mypopularmovies;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -49,7 +50,7 @@ public class AboutDialogFragment extends DialogFragment
         // get an instance of layout inflater
         LayoutInflater imageInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         // get a reference to the custom layout to display theMovieDB logo and powered by message
-        View imageView = imageInflater.inflate(R.layout.about_image_layout,null);
+        @SuppressLint("InflateParams") View imageView = imageInflater.inflate(R.layout.about_image_layout,null);
         // adds the message to the alert window
         builder.setMessage(R.string.about_app_message)
                 // adds the custom layout to the alert window

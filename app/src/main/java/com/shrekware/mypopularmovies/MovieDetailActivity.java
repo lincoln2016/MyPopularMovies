@@ -76,13 +76,13 @@ public class MovieDetailActivity extends AppCompatActivity
     private void setImage()
     {
         // string to get the poster path from the movie object
-        String Poster = intent.getStringExtra("posterpath");
+        String Poster = intent.getStringExtra("poster_path");
         // you will need a ‘size’, which will be one of the following:
         // "w92", "w154", "w185", "w342", "w500", "w780",
         // or "original". For most phones we recommend using “w185”
-        final String imageSize = getString(R.string.moviedb_image_size);
+        final String imageSize = getString(R.string.themoviedb_image_size);
         //the complete poster path for Picasso to use
-        final String PosterPath = getString(R.string.moviedb_base_image_url)+ imageSize + Poster;
+        final String PosterPath = getString(R.string.themoviedb_base_image_url)+ imageSize + Poster;
         //ask Picasso to do the heavy lifting, getting the pictures and load them into image
         Picasso.get().load(PosterPath).placeholder(R.mipmap.loading_please_wait).fit().into(image);
     }

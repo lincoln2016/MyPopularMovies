@@ -62,20 +62,12 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     private List<MovieObject> resultsList;
     //loading indicator
     private ProgressBar mProgressBar;
-    // an instance of the MovieListAdapter class, it contains
-    // the instructions on how to populate the movie item layout
-    public MovieListAdapter mAdapter;
     //allows resources access at interface
-    //TODO not sure this is needed???
     public static Resources resources;
     // a reference to the recyclerView
     private RecyclerView movieListRecyclerView;
     // app context
     private Context mContext;
-    // the list of movie objects returned in the resultsList
-    // used in adapter initialization
-    //TODO is te filler needed???
-    private  List<MovieObject> listMyList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -96,18 +88,14 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         // create a reference to the spinner used to indicate loading
         mProgressBar = findViewById(R.id.progressBar);
         // create a reference to recycler view widget
-        movieListRecyclerView = findViewById(R.id.recyleView_movieList);
-        // creating the movie item adapter with the required parameters
-        mAdapter = new MovieListAdapter(listMyList,this);
+        movieListRecyclerView = findViewById(R.id.recyclerView_movieList);
         // sets the recycler view to a grid layout with 2 columns
         movieListRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
-        //attaches the movie item adapter to the recycler view
-        movieListRecyclerView.setAdapter(mAdapter);
         //asks for the popular movies from the movie.db
         getMovieJson(getString(R.string.themoviedb_sort_by_popular));
   }
   // needed to reference this on clickHandler
-     public MovieListAdapter.MovieListAdapterOnClickHandler getClickhandler(){
+     public MovieListAdapter.MovieListAdapterOnClickHandler getClickHandler(){
         return this;
      }
      // gets the movie info and populates the gridView
@@ -117,12 +105,10 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
      {   //shows te loading indicator
         showLoading();
         //checks if results are present, and resets them
-        if(resultsList != null & mAdapter !=null)
+        if(resultsList != null)
         {
           //clears the movie objects from the list
           resultsList.clear();
-          //resets the adapter for the recycler view, not sure its needed
-          mAdapter.reset();
         }
         // gets an instance of retrofit client
         RetrofitClient client = new RetrofitClient();
@@ -132,8 +118,8 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
           //checks which options was sent in the request
           switch (sort_by)
           {
-            //if Most Popular is selected in the options menu
-            case "popular":
+              //if Most Popular is selected in the options menu
+              case "popular":
                 // the retrofit call to retrieve the Popular movies
                 client.getApiService().getPopularMovies(API_KEY).enqueue(new Callback<MovieListObject>()
                 {
@@ -147,9 +133,10 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                           //closes the loading indicator and shows the recyclerView
                           showMovies();
                           //loads the response into the resultsList
+                          assert response.body() != null;
                           resultsList = response.body().getResults();
                           //adds the resultList into the RecyclerView
-                          movieListRecyclerView.setAdapter(new MovieListAdapter(resultsList, getClickhandler()));
+                          movieListRecyclerView.setAdapter(new MovieListAdapter(resultsList, getClickHandler()));
                       }
                    }
                    @Override
@@ -171,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                         {
                              showMovies();
                              resultsList = response.body().getResults();
-                             movieListRecyclerView.setAdapter(new MovieListAdapter(resultsList,getClickhandler()));
+                             movieListRecyclerView.setAdapter(new MovieListAdapter(resultsList,getClickHandler()));
                         }
                     }
                     @Override
@@ -193,10 +180,10 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
      // shows loading indicator
      private void showLoading()
      {
-        //hide the movie list
-        movieListRecyclerView.setVisibility(View.GONE);
         //show the loading indicator
         mProgressBar.setVisibility(View.VISIBLE);
+        //hide the movie list
+        movieListRecyclerView.setVisibility(View.GONE);
      }
         //hides the loading indicator
      private void showMovies()
@@ -210,10 +197,11 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
      //checks the device to see if there is a network connection
      private boolean getInternetStatus()
      {
-        // opens a dialog to the phone about its connection to the internet
+        // opens a dialog to the phone about its connection to the network
         ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-
+         // gets an instance of the NetworkInfo.class
         NetworkInfo networkInfo = null;
+         // checks to see if the connectivity manager is available
         if (connectivityManager != null)
         {
             //asks the phone if it has a network connection
@@ -236,20 +224,21 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
 
      @Override
      public boolean onOptionsItemSelected(MenuItem item)
-     {      // get the id of the menu item selected
+     {
+        // get the id of the menu item selected
         int id = item.getItemId();
         // parse the menu item for which item was clicked,
         // technically a switch statement might be better
         if (id == R.id.popular_movies)
         {
             getSupportActionBar().setTitle(R.string.title_popular_movies);
-            getMovieJson("popular");
+            getMovieJson(getString(R.string.themoviedb_sort_by_popular));
             return true;
         }
         if (id == R.id.top_rated)
         {
             getSupportActionBar().setTitle(R.string.title_top_rated_movies);
-            getMovieJson("top_rated");
+            getMovieJson(getString(R.string.themoviedb_sort_by_top_rated));
             return true;
         }
         if (id == R.id.about)
@@ -269,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
           Intent intent = new Intent(MainActivity.this,MovieDetailActivity.class);
           intent.putExtra("title", movie.getTitle());
           intent.putExtra("overview", movie.getOverview());
-          intent.putExtra("posterpath", movie.getPosterPath());
+          intent.putExtra("poster_path", movie.getPosterPath());
           intent.putExtra("release_date", movie.getReleaseDate());
           intent.putExtra("rating", movie.getVoteAverage());
 

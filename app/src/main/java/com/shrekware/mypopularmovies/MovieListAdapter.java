@@ -42,17 +42,18 @@ import java.util.List;
 public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.ViewHolder>
 {
    // get an int for the movieDetail object
-   private List<MovieObject> myListOfMovies;
+   final private List<MovieObject> myListOfMovies;
    private ImageView image;
    final private MovieListAdapterOnClickHandler myOnClickHandler;
-   /**
-   * Constructor using the context and the item count
+   /*
+   * Constructor using the List of Movie Objects and a clickHandler
    */
-    public MovieListAdapter(List<MovieObject> myList, MovieListAdapterOnClickHandler clickhandler)
-    {
+   public MovieListAdapter(List<MovieObject> myList, MovieListAdapterOnClickHandler clickHandler)
+   {
        myListOfMovies = myList;
-       myOnClickHandler = clickhandler;
-    }
+       myOnClickHandler = clickHandler;
+   }
+
     @NonNull
     @Override
     public MovieListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
@@ -76,7 +77,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
         final String imageSize = "w185/";
         final String PosterPath = "http://image.tmdb.org/t/p/"+ imageSize + myMovie.getPosterPath();
         Picasso.get().load(PosterPath).placeholder(R.mipmap.loading_please_wait).fit().into(image);
-        // didnt work on lollipop  no fit??
+        // didn't work on lollipop  no fit??
         // Picasso.get().load(PosterPath).placeholder(R.drawable.ic_launcher_foreground).into(image);
     }
        //must have, to keep track of size of list
@@ -91,7 +92,6 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
     //must have to reset the list to 0
     public void reset()
     {
-      // TODO   set
         if(myListOfMovies!= null)
         {
             myListOfMovies.clear();
@@ -104,7 +104,6 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
     public class  ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         // Will display the image of the movie
-
         /*
          * Constructor for our ViewHolder.
          * Within this constructor,
