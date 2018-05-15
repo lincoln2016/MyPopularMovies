@@ -26,43 +26,57 @@
 
 package com.shrekware.mypopularmovies.retrofitstuff;
 
-import retrofit2.Call;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-/**
- * This interface is used with the Retrofit client as the service the client will use
- * to retrieve the most popular movies list from theMovieDB
- */
+import java.util.List;
 
-public interface MovieListServicePopular
-{
-
-       //  builds the query part of the path for theMovieDB.org API call
-     //  "/3/discover/movie?api_key="+ API_KEY + "&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1";
-
-       //Every method must have an HTTP annotation that provides
-       // the request method and relative URL.
-       // There are five built-in annotations:
-       // GET, POST, PUT, DELETE, and HEAD.
-/*
-       @GET("/3/discover/movie")
-
-       // the method Call the Retrofit client will use to return the MOST POPULAR movie list from theMovieDB.org
-       Call<MovieListRetrofitObject> getAllMovies(@Query("api_key") String api_key, @Query("language") String language, @Query("sort_by") String sort_by,
-                                                  @Query("include_adult")String include_adult, @Query("include_video") String include_video,
-                                                  @Query("page") String page);
-*/
-       @GET("/3/movie/popular")
-       Call<MovieListRetrofitObject> getPopularMovies(@Query("api_key") String api_key);
-
-       @GET("/3/movie/top_rated")
-       Call<MovieListRetrofitObject> getTopRatedMovies(@Query("api_key") String api_key);
+public class MovieListObject {
 
 
+        @SerializedName("page")
+        @Expose
+        private Integer page;
+        @SerializedName("total_results")
+        @Expose
+        private Integer totalResults;
+        @SerializedName("total_pages")
+        @Expose
+        private Integer totalPages;
+        @SerializedName("results")
+        @Expose
+        private List<MovieObject> results = null;
 
+        public Integer getPage() {
+            return page;
+        }
 
+        public void setPage(Integer page) {
+            this.page = page;
+        }
 
+        public Integer getTotalResults() {
+            return totalResults;
+        }
 
+        public void setTotalResults(Integer totalResults) {
+            this.totalResults = totalResults;
+        }
 
-}
+        public Integer getTotalPages() {
+            return totalPages;
+        }
+
+        public void setTotalPages(Integer totalPages) {
+            this.totalPages = totalPages;
+        }
+
+        public List<MovieObject> getResults() {
+            return results;
+        }
+
+        public void setResults(List<MovieObject> results) {
+            this.results = results;
+        }
+
+    }

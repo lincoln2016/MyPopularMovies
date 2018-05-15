@@ -33,7 +33,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.shrekware.mypopularmovies.retrofitstuff.MovieDetailsRetrofitObject;
+import com.shrekware.mypopularmovies.retrofitstuff.MovieObject;
 import com.squareup.picasso.Picasso;
 import java.util.List;
 /**
@@ -42,13 +42,13 @@ import java.util.List;
 public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.ViewHolder>
 {
    // get an int for the movieDetail object
-   private List<MovieDetailsRetrofitObject> myListOfMovies;
+   private List<MovieObject> myListOfMovies;
    private ImageView image;
    final private MovieListAdapterOnClickHandler myOnClickHandler;
    /**
    * Constructor using the context and the item count
    */
-    public MovieListAdapter(List<MovieDetailsRetrofitObject> myList, MovieListAdapterOnClickHandler clickhandler,Context context)
+    public MovieListAdapter(List<MovieObject> myList, MovieListAdapterOnClickHandler clickhandler)
     {
        myListOfMovies = myList;
        myOnClickHandler = clickhandler;
@@ -69,13 +69,13 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
     {
         // get a reference to the viewHHolder
         image = holder.itemView.findViewById(R.id.movie_imageView);
-        MovieDetailsRetrofitObject myMovie = myListOfMovies.get(position);
+        MovieObject myMovie = myListOfMovies.get(position);
         //you will need a ‘size’, which will be one of the following:
         //"w92", "w154", "w185", "w342", "w500", "w780",
         // or "original". For most phones we recommend using “w185”
         final String imageSize = "w185/";
         final String PosterPath = "http://image.tmdb.org/t/p/"+ imageSize + myMovie.getPosterPath();
-        Picasso.get().load(PosterPath).placeholder(R.mipmap.ic_launcher).fit().into(image);
+        Picasso.get().load(PosterPath).placeholder(R.mipmap.loading_please_wait).fit().into(image);
         // didnt work on lollipop  no fit??
         // Picasso.get().load(PosterPath).placeholder(R.drawable.ic_launcher_foreground).into(image);
     }
@@ -105,13 +105,13 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
     {
         // Will display the image of the movie
 
-        /**
+        /*
          * Constructor for our ViewHolder.
          * Within this constructor,
          * we get a reference to our ImageView
-         **/
+         */
 
-        public ViewHolder(View view)
+        private ViewHolder(View view)
         {
             super(view);
             //the image for the recyclerView
@@ -123,7 +123,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
         @Override
         public void onClick(View v)
         {
-            MovieDetailsRetrofitObject myMovie = myListOfMovies.get(getAdapterPosition());
+            MovieObject myMovie = myListOfMovies.get(getAdapterPosition());
            myOnClickHandler.onClick(myMovie);
         }
 
@@ -134,7 +134,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.View
      * The interface that receives onClick messages.
      */
     public interface MovieListAdapterOnClickHandler {
-        void onClick(MovieDetailsRetrofitObject movie);
+        void onClick(MovieObject movie);
     }
     /*
      * This gets called by the child views during a click. We fetch the movie that has been

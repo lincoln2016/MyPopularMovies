@@ -31,12 +31,28 @@
                             <entry key="launcherLegacy">
                               <value>
                                 <PersistentState>
+                                  <option name="children">
+                                    <map>
+                                      <entry key="image">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="trimmed" value="true" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="iconShape" value="NONE" />
-                                      <entry key="imageAsset" value="C:\Users\henry\Desktop\svgexportblack.jpg" />
-                                      <entry key="outputName" value="themoviedb" />
+                                      <entry key="dogEared" value="true" />
+                                      <entry key="iconShape" value="VRECT" />
+                                      <entry key="imageAsset" value="C:\Users\henry\Downloads\Now Loading.png" />
+                                      <entry key="outputName" value="loading_please_wait" />
                                     </map>
                                   </option>
                                 </PersistentState>

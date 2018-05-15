@@ -27,9 +27,11 @@
 
 package com.shrekware.mypopularmovies.retrofitstuff;
 
+import com.shrekware.mypopularmovies.MainActivity;
+import com.shrekware.mypopularmovies.R;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-/**
+/*
  * This class is for Retrofit to build the client object
  * and base path that will be used to retrieve the
  * most popular movies list from theMovieDB.org
@@ -39,14 +41,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClient
 {
     // constant string for theMovieDB.org base API URL - https://api.themoviedb.org/
-    private static final String BASE_URL= "https://api.themoviedb.org/";
-    // create an instance of the MovieListServicePopular which sets up the call for retrofit,
-    // the MovieListServicePopular includes the API_KEY
-    private MovieListServicePopular movieListServicePopular;
+    private static final String BASE_URL= MainActivity.resources.getString(R.string.retrofit_client_base_url);
+    // create an instance of the MovieListService which sets up the call for retrofit,
+    // the MovieListService includes the API_KEY
+    private MovieListService movieListService;
 
-/**
- * the constructor for the Retrofit Client                                                                                the
- */
+  /*
+  * the constructor for the Retrofit Client
+  */
     public RetrofitClient()
     {
         // creating the retrofit object we will use to call theMovieDB.org
@@ -58,11 +60,11 @@ public class RetrofitClient
                 //builds the retrofit client
                 .build();
         // adds the movie list service to the retrofit client
-        movieListServicePopular = retrofit.create(MovieListServicePopular.class);
+        movieListService = retrofit.create(MovieListService.class);
     }
     //  the method the retrofit client will call to retrieve the full client call
-    public MovieListServicePopular getApiService()
+    public MovieListService getApiService()
     {
-         return movieListServicePopular;
+         return movieListService;
     }
 }

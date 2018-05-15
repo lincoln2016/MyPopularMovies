@@ -26,22 +26,30 @@
 
 
 <resources>
-    <string name="title_popular_movies">Popular Movies</string>
     <string name="app_name">MyPopularMovies</string>
+
     <string name="api_key">Your API KEY Here</string>
-    <string name="top_rated">Top Rated</string>
-    <string name="about">About</string>
+
+    <string name="title_popular_movies">Popular Movies</string>
+    <string name="title_top_rated_movies">Top Rated Movies</string>
+
+    <string name="movie_poster_image">movie poster image</string>
     <string name="themoviedb_sort_by_popular">popular</string>
     <string name="average_user_rating">Average user rating</string>
+    <string name="movie_detail_release_date_string">Release Date:</string>
+    <string name="log_error_message_popular_movie_call">Error on Failure of the Popular Movie Call:</string>
+    <string name="log_error_message_top_rated_call">Error on Failure of the Top Rated Movie Call:</string>
+    <string name="toast_message_no_internet_access">No Internet Connection, Please try again.</string>
+    <string name="retrofit_client_base_url">https://api.themoviedb.org/</string>
+
+    <string name="about">About</string>
     <string name="about_app_message">MyPopularMovie Application\n
         version 1.0\n\n
         Copyright  2018 Henry Ayers.\n
         All rights reserved.\n\n
         MyPopularMovie uses themoviedb.org API for all movie data,
         for more information,\n contact henry@shrekware.com\n</string>
-    <string name="title_detail_movie">Movie Details</string>
-    <string name="movie_poster_image">movie poster image</string>
     <string name="logo_powered_by_www_themoviedb_org">Powered by www.themoviedb.org</string>
-
-
+    <string name="moviedb_base_image_url">http://image.tmdb.org/t/p/</string>
+    <string name="moviedb_image_size">w342/</string>
 </resources>

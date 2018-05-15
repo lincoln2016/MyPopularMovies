@@ -31,8 +31,13 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class MovieDetailsRetrofitObject {
-
+/*
+*
+*
+*
+*
+ */
+public class MovieObject {
 
     @SerializedName("vote_count")
     @Expose
@@ -61,9 +66,6 @@ public class MovieDetailsRetrofitObject {
     @SerializedName("original_title")
     @Expose
     private String originalTitle;
-    @SerializedName("genre_ids")
-    @Expose
-    private List<Integer> genreIds = null;
     @SerializedName("backdrop_path")
     @Expose
     private String backdropPath;
@@ -77,7 +79,7 @@ public class MovieDetailsRetrofitObject {
     @Expose
     private String releaseDate;
 
-    public MovieDetailsRetrofitObject(Integer voteCount, Integer id, Boolean video, Double voteAverage, String title, Double popularity, String posterPath, String originalLanguage, String originalTitle, List<Integer> genreIds, String backdropPath, Boolean adult, String overview, String releaseDate) {
+    public MovieObject(Integer voteCount, Integer id, Boolean video, Double voteAverage, String title, Double popularity, String posterPath, String originalLanguage, String originalTitle, List<Integer> genreIds, String backdropPath, Boolean adult, String overview, String releaseDate) {
         this.voteCount = voteCount;
         this.id = id;
         this.video = video;
@@ -87,7 +89,6 @@ public class MovieDetailsRetrofitObject {
         this.posterPath = posterPath;
         this.originalLanguage = originalLanguage;
         this.originalTitle = originalTitle;
-        this.genreIds = genreIds;
         this.backdropPath = backdropPath;
         this.adult = adult;
         this.overview = overview;
@@ -164,14 +165,6 @@ public class MovieDetailsRetrofitObject {
 
     public void setOriginalTitle(String originalTitle) {
         this.originalTitle = originalTitle;
-    }
-
-    public List<Integer> getGenreIds() {
-        return genreIds;
-    }
-
-    public void setGenreIds(List<Integer> genreIds) {
-        this.genreIds = genreIds;
     }
 
     public String getBackdropPath() {
