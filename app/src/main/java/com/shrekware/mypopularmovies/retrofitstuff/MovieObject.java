@@ -28,16 +28,14 @@ package com.shrekware.mypopularmovies.retrofitstuff;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 /*
-*
-*
-*
-*
+* This class is to hold all the information for
+* the movie object parsed from the results of theMovieDB call
  */
-public class MovieObject {
+public class MovieObject
+{
 
     @SerializedName("vote_count")
     @Expose
@@ -79,7 +77,8 @@ public class MovieObject {
     @Expose
     private String releaseDate;
 
-    public MovieObject(Integer voteCount, Integer id, Boolean video, Double voteAverage, String title, Double popularity, String posterPath, String originalLanguage, String originalTitle, List<Integer> genreIds, String backdropPath, Boolean adult, String overview, String releaseDate) {
+    public MovieObject(Integer voteCount, Integer id, Boolean video, Double voteAverage, String title, Double popularity, String posterPath, String originalLanguage, String originalTitle, List<Integer> genreIds, String backdropPath, Boolean adult, String overview, String releaseDate)
+    {
         this.voteCount = voteCount;
         this.id = id;
         this.video = video;
@@ -103,7 +102,8 @@ public class MovieObject {
         this.voteCount = voteCount;
     }
 
-    public Integer getId() {
+    public Integer getId()
+    {
         return id;
     }
 
@@ -155,7 +155,8 @@ public class MovieObject {
         return originalLanguage;
     }
 
-    public void setOriginalLanguage(String originalLanguage) {
+    public void setOriginalLanguage(String originalLanguage)
+    {
         this.originalLanguage = originalLanguage;
     }
 

@@ -92,7 +92,8 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         // sets the recycler view to a grid layout with 2 columns
         movieListRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
         //asks for the popular movies from the movie.db
-        getMovieJson(getString(R.string.themoviedb_sort_by_popular));
+        //getMovieJson(getString(R.string.themoviedb_sort_by_popular));
+        getMovieJson("popular");
   }
   // needed to reference this on clickHandler
      public MovieListAdapter.MovieListAdapterOnClickHandler getClickHandler(){
@@ -104,6 +105,9 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
      private void getMovieJson(String sort_by)
      {   //shows te loading indicator
         showLoading();
+        // checks to see if the API KEY matches the initial "Your API KEY Here" value
+        // if they match, Toast pops stating missing API KEY
+        isApiKeyPresent();
         //checks if results are present, and resets them
         if(resultsList != null)
         {
@@ -174,7 +178,8 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         else
         {
              showMovies();
-             Toast.makeText(this, R.string.toast_message_no_internet_access,Toast.LENGTH_LONG).show();
+             Toast.makeText(this, R.string.toast_message_no_internet_access,Toast.LENGTH_LONG)
+                     .show();
         }
      }
      // shows loading indicator
@@ -185,7 +190,22 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         //hide the movie list
         movieListRecyclerView.setVisibility(View.GONE);
      }
-        //hides the loading indicator
+     // checks to see if the API KEY was changed in the strings.xml file
+     private void isApiKeyPresent()
+     {
+        // checks to see if the values are the same
+        if(getString(R.string.api_key).equals(getString(R.string.api_test_value)))
+        {
+            // if they are the same, then there is no API KEY and we pop a toast message
+            // that says Missing API KEY
+            Toast.makeText(this, R.string.mainActivity_missing_api_key,Toast.LENGTH_LONG)
+                    .show();
+            //hides the spinner, to indicate not searching
+            mProgressBar.setVisibility(View.GONE);
+        }
+     }
+
+      //hides the loading indicator
      private void showMovies()
      {
         // hide the loading indicator
@@ -198,7 +218,8 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
      private boolean getInternetStatus()
      {
         // opens a dialog to the phone about its connection to the network
-        ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
          // gets an instance of the NetworkInfo.class
         NetworkInfo networkInfo = null;
          // checks to see if the connectivity manager is available
@@ -231,6 +252,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         // technically a switch statement might be better
         if (id == R.id.popular_movies)
         {
+            //TODO finish comments
             getSupportActionBar().setTitle(R.string.title_popular_movies);
             getMovieJson(getString(R.string.themoviedb_sort_by_popular));
             return true;
@@ -253,16 +275,14 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
 
      @Override
      public void onClick(MovieObject movie)
-     {
-        Log.v("MainActivity", "onclick Movie");
+     {    //
           Intent intent = new Intent(MainActivity.this,MovieDetailActivity.class);
           intent.putExtra("title", movie.getTitle());
           intent.putExtra("overview", movie.getOverview());
           intent.putExtra("poster_path", movie.getPosterPath());
           intent.putExtra("release_date", movie.getReleaseDate());
           intent.putExtra("rating", movie.getVoteAverage());
-
-        startActivity(intent);
+          startActivity(intent);
      }
 }
 
