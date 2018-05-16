@@ -29,28 +29,27 @@ package com.shrekware.mypopularmovies.retrofitstuff;
 
 import com.shrekware.mypopularmovies.MainActivity;
 import com.shrekware.mypopularmovies.R;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 /*
  * This class is for Retrofit to build the client object
  * and base path that will be used to retrieve the
  * most popular movies list from theMovieDB.org
- * or the newest Released movies
+ * or the top rated movies
  */
 
-public class RetrofitClient
-{
+public class RetrofitClient {
     // constant string for theMovieDB.org base API URL - https://api.themoviedb.org/
-    private static final String BASE_URL= MainActivity.resources.getString(R.string.retrofit_client_base_url);
-    // create an instance of the MovieListService which sets up the call for retrofit,
+    private static final String BASE_URL = MainActivity.resources.getString(R.string.retrofit_client_base_url);
+    // creates an instance of the MovieListService which sets up the call for retrofit
     // the MovieListService includes the API_KEY
-   final private MovieListService movieListService;
+    final private MovieListService movieListService;
 
-  /*
-  * the constructor for the Retrofit Client
-  */
-    public RetrofitClient()
-    {
+    /*
+     * the constructor for the Retrofit Client
+     */
+    public RetrofitClient() {
         // creating the retrofit object we will use to call theMovieDB.org
         Retrofit retrofit = new Retrofit.Builder()
                 //adds base url to the retrofit client
@@ -62,9 +61,9 @@ public class RetrofitClient
         // adds the movie list service to the retrofit client
         movieListService = retrofit.create(MovieListService.class);
     }
+
     //  the method the retrofit client will call to retrieve the full client call
-    public MovieListService getApiService()
-    {
-         return movieListService;
+    public MovieListService getApiService() {
+        return movieListService;
     }
 }

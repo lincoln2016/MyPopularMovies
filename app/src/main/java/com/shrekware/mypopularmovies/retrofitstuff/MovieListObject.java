@@ -31,52 +31,56 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+/*
+ *   The Movie List object is retrieved from theMovieDB.org
+ *   it contains all the general information for the list of movie
+ *   objects
+ */
 public class MovieListObject {
 
+    @SerializedName("page")
+    @Expose
+    private Integer page;
+    @SerializedName("total_results")
+    @Expose
+    private Integer totalResults;
+    @SerializedName("total_pages")
+    @Expose
+    private Integer totalPages;
+    @SerializedName("results")
+    @Expose
+    private List<MovieObject> results = null;
 
-        @SerializedName("page")
-        @Expose
-        private Integer page;
-        @SerializedName("total_results")
-        @Expose
-        private Integer totalResults;
-        @SerializedName("total_pages")
-        @Expose
-        private Integer totalPages;
-        @SerializedName("results")
-        @Expose
-        private List<MovieObject> results = null;
-
-        public Integer getPage() {
-            return page;
-        }
-
-        public void setPage(Integer page) {
-            this.page = page;
-        }
-
-        public Integer getTotalResults() {
-            return totalResults;
-        }
-
-        public void setTotalResults(Integer totalResults) {
-            this.totalResults = totalResults;
-        }
-
-        public Integer getTotalPages() {
-            return totalPages;
-        }
-
-        public void setTotalPages(Integer totalPages) {
-            this.totalPages = totalPages;
-        }
-
-        public List<MovieObject> getResults() {
-            return results;
-        }
-
-        public void setResults(List<MovieObject> results) {
-            this.results = results;
-        }
-
+    public Integer getPage() {
+        return page;
     }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    public Integer getTotalResults() {
+        return totalResults;
+    }
+
+    public void setTotalResults(Integer totalResults) {
+        this.totalResults = totalResults;
+    }
+
+    public Integer getTotalPages() {
+        return totalPages;
+    }
+
+    public void setTotalPages(Integer totalPages) {
+        this.totalPages = totalPages;
+    }
+
+    public List<MovieObject> getResults() {
+        return results;
+    }
+
+    public void setResults(List<MovieObject> results) {
+        this.results = results;
+    }
+
+}

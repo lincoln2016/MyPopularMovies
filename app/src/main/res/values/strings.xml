@@ -30,8 +30,14 @@
 
     <string name="api_key">Your API KEY Here</string>
     <string name="api_test_value">Your API KEY Here</string>
+    <string name="mainActivity_missing_api_key">Missing API KEY</string>
+
     <string name="title_popular_movies">Popular Movies</string>
     <string name="title_top_rated_movies">Top Rated Movies</string>
+
+    <string name="themoviedb_base_image_url">http://image.tmdb.org/t/p/</string>
+    <string name="themoviedb_image_size">w342/</string>
+
 
     <string name="movie_poster_image">movie poster image</string>
     <string name="themoviedb_sort_by_popular">popular</string>
@@ -51,7 +57,4 @@
         MyPopularMovie uses themoviedb.org API for all movie data,
         for more information,\n contact henry@shrekware.com\n</string>
     <string name="logo_powered_by_www_themoviedb_org">Powered by www.themoviedb.org</string>
-    <string name="themoviedb_base_image_url">http://image.tmdb.org/t/p/</string>
-    <string name="themoviedb_image_size">w342/</string>
-    <string name="mainActivity_missing_api_key">Missing API KEY</string>
 </resources>

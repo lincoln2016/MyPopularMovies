@@ -35,12 +35,11 @@ import retrofit2.http.Query;
  * to retrieve the most popular movies list from theMovieDB
  */
 
-public interface MovieListService
-{
-       //  builds the query part of the path for theMovieDB.org API call
-       @GET("/3/movie/popular")
-       Call<MovieListObject> getPopularMovies(@Query("api_key") String api_key);
+public interface MovieListService {
+    //  builds the query part of the path for theMovieDB.org API call
+    @GET("/3/movie/popular")
+    Call<MovieListObject> getPopularMovies(@Query("api_key") String api_key);
 
-       @GET("/3/movie/top_rated")
-       Call<MovieListObject> getTopRatedMovies(@Query("api_key") String api_key);
+    @GET("/3/movie/top_rated")
+    Call<MovieListObject> getTopRatedMovies(@Query("api_key") String api_key);
 }

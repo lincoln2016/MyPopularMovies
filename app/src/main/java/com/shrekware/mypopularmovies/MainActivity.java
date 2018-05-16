@@ -45,16 +45,23 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.shrekware.mypopularmovies.retrofitstuff.MovieObject;
 import com.shrekware.mypopularmovies.retrofitstuff.MovieListObject;
+import com.shrekware.mypopularmovies.retrofitstuff.MovieObject;
 import com.shrekware.mypopularmovies.retrofitstuff.RetrofitClient;
+
 import java.util.List;
+import java.util.Objects;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+/*
+ * Main Class implements the onClickHandler for the MovieListAdapter
+ * and shows the results of the API call to theMovieDB.org
+ */
 
-public class MainActivity extends AppCompatActivity implements MovieListAdapter.MovieListAdapterOnClickHandler
-{
+public class MainActivity extends AppCompatActivity implements MovieListAdapter.MovieListAdapterOnClickHandler {
+    // tag for log messages
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
     // the api key from theMovieDB, it can be found in the values/strings.xml file
     private String API_KEY;
@@ -70,15 +77,14 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     private Context mContext;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         // load the saved state for on rotation events and reloading
         super.onCreate(savedInstanceState);
         // set layout for this view
         setContentView(R.layout.activity_main);
         // changes the title of the activity to match the type of movie list returned
         // default is popular movies
-        getSupportActionBar().setTitle(R.string.title_popular_movies);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.title_popular_movies);
         // grab a context reference for future use
         mContext = this;
         //get a reference to the system resources, used in MovieListService to access string values
@@ -90,200 +96,211 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         // create a reference to recycler view widget
         movieListRecyclerView = findViewById(R.id.recyclerView_movieList);
         // sets the recycler view to a grid layout with 2 columns
-        movieListRecyclerView.setLayoutManager(new GridLayoutManager(this,2));
+        movieListRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         //asks for the popular movies from the movie.db
-        //getMovieJson(getString(R.string.themoviedb_sort_by_popular));
-        getMovieJson("popular");
-  }
-  // needed to reference this on clickHandler
-     public MovieListAdapter.MovieListAdapterOnClickHandler getClickHandler(){
+        getMovieJson(getString(R.string.themoviedb_sort_by_popular));
+    }
+
+    // needed to reference this on clickHandler
+    private MovieListAdapter.MovieListAdapterOnClickHandler getClickHandler() {
+        //returns this for the OnClickHandler
         return this;
-     }
-     // gets the movie info and populates the gridView
-     // based on the sort_by value
-     // 2 options  Popular or Top Rated
-     private void getMovieJson(String sort_by)
-     {   //shows te loading indicator
+    }
+
+    // gets the movie info and populates the gridView
+    // based on the sort_by value
+    // 2 options  Popular or Top Rated
+    private void getMovieJson(String sort_by) {   //shows te loading indicator
         showLoading();
         // checks to see if the API KEY matches the initial "Your API KEY Here" value
         // if they match, Toast pops stating missing API KEY
         isApiKeyPresent();
-        //checks if results are present, and resets them
-        if(resultsList != null)
-        {
-          //clears the movie objects from the list
-          resultsList.clear();
+        //checks if the list of movie objects exists
+        if (resultsList != null) {
+            //if there is a list, we clear the movie objects from it
+            resultsList.clear();
         }
         // gets an instance of retrofit client
         RetrofitClient client = new RetrofitClient();
-        // checks if internet status is true
-        if (getInternetStatus())
-        {
-          //checks which options was sent in the request
-          switch (sort_by)
-          {
-              //if Most Popular is selected in the options menu
-              case "popular":
-                // the retrofit call to retrieve the Popular movies
-                client.getApiService().getPopularMovies(API_KEY).enqueue(new Callback<MovieListObject>()
-                {
-                  //the response of the popular movies call
-                   @Override
-                   public void onResponse(@NonNull Call<MovieListObject> call, @NonNull Response<MovieListObject> response)
-                   {
-                      //checks if the response is null
-                      if (response.body() != null)
-                      {
-                          //closes the loading indicator and shows the recyclerView
-                          showMovies();
-                          //loads the response into the resultsList
-                          assert response.body() != null;
-                          resultsList = response.body().getResults();
-                          //adds the resultList into the RecyclerView
-                          movieListRecyclerView.setAdapter(new MovieListAdapter(resultsList, getClickHandler()));
-                      }
-                   }
-                   @Override
-                   public void onFailure(@NonNull Call<MovieListObject> call, @NonNull Throwable t)
-                   {
-                      Log.v(LOG_TAG, getString(R.string.log_error_message_popular_movie_call) + t.toString());
-                   }
-                });
-            break;
-            // if Top Rated is selected in the options menu
-            case "top_rated":
-                 //the retrofit call to retrieve the Top Rated movies
-                 client.getApiService().getTopRatedMovies(API_KEY).enqueue(new Callback<MovieListObject>()
-                 {
-                    @Override
-                    public void onResponse(@NonNull Call<MovieListObject> call, @NonNull Response<MovieListObject> response)
-                    {
-                        if (response.body() != null)
-                        {
-                             showMovies();
-                             resultsList = response.body().getResults();
-                             movieListRecyclerView.setAdapter(new MovieListAdapter(resultsList,getClickHandler()));
+        // checks if internet/network status is available
+        if (getInternetStatus()) {
+            //checks which option was sent with the request
+            switch (sort_by) {
+                //if Most Popular is selected in the options menu
+                case "popular":
+                    // the retrofit call to retrieve the Popular movies
+                    client.getApiService().getPopularMovies(API_KEY).enqueue(new Callback<MovieListObject>() {
+                        //the response of the popular movies call
+                        @Override
+                        public void onResponse(@NonNull Call<MovieListObject> call, @NonNull Response<MovieListObject> response) {
+                            //checks if the response is null
+                            if (response.body() != null) {
+                                //closes the loading indicator and shows the recyclerView
+                                showMovies();
+                                //loads the response into the resultsList
+                                resultsList = response.body().getResults();
+                                //adds the resultList to the RecyclerView
+                                movieListRecyclerView.setAdapter(new MovieListAdapter(resultsList, getClickHandler()));
+                            }
                         }
-                    }
-                    @Override
-                    public void onFailure(@NonNull Call<MovieListObject> call, @NonNull Throwable t)
-                    {
-                        Log.v(LOG_TAG, getString(R.string.log_error_message_top_rated_call) + t.toString());
-                    }
-                 });
-                // end of switch statement
-             break;
-          }
+
+                        // if the call to theMovieDb should fail
+                        @Override
+                        public void onFailure(@NonNull Call<MovieListObject> call, @NonNull Throwable t) {
+
+                            // logs the error message of a failure
+                            Log.d(LOG_TAG, getString(R.string.log_error_message_popular_movie_call) + t.toString());
+                        }
+                    });
+                    break;
+                // if Top Rated is selected in the options menu
+                case "top_rated":
+                    //the retrofit call to retrieve the Top Rated movies
+                    client.getApiService().getTopRatedMovies(API_KEY).enqueue(new Callback<MovieListObject>() {
+                        // response from the top rated movies call
+                        @Override
+                        public void onResponse(@NonNull Call<MovieListObject> call, @NonNull Response<MovieListObject> response) {
+                            // checks is there was a response
+                            if (response.body() != null) {
+                                //closes the loading indicator and shows the recyclerView
+                                showMovies();
+                                //loads the response into the resultsList
+                                resultsList = response.body().getResults();
+                                //adds the resultList to the RecyclerView
+                                movieListRecyclerView.setAdapter(new MovieListAdapter(resultsList, getClickHandler()));
+                            }
+                        }
+
+                        // if the call to theMovieDb should fail
+                        @Override
+                        public void onFailure(@NonNull Call<MovieListObject> call, @NonNull Throwable t) {
+                            // logs the error message of a failure
+                            Log.d(LOG_TAG, getString(R.string.log_error_message_top_rated_call) + t.toString());
+                        }
+                    });
+                    // end of switch statement
+                    break;
+            }
+        } else {
+            //closes the loading indicator and shows the recyclerView
+            showMovies();
+            // shows toast stating No Internet Connection
+            Toast.makeText(this, R.string.toast_message_no_internet_access, Toast.LENGTH_LONG)
+                    .show();
         }
-        else
-        {
-             showMovies();
-             Toast.makeText(this, R.string.toast_message_no_internet_access,Toast.LENGTH_LONG)
-                     .show();
-        }
-     }
-     // shows loading indicator
-     private void showLoading()
-     {
+    }
+
+    // shows loading indicator
+    private void showLoading() {
         //show the loading indicator
         mProgressBar.setVisibility(View.VISIBLE);
         //hide the movie list
         movieListRecyclerView.setVisibility(View.GONE);
-     }
-     // checks to see if the API KEY was changed in the strings.xml file
-     private void isApiKeyPresent()
-     {
-        // checks to see if the values are the same
-        if(getString(R.string.api_key).equals(getString(R.string.api_test_value)))
-        {
-            // if they are the same, then there is no API KEY and we pop a toast message
+    }
+
+    // checks to see if the API KEY was changed in the strings.xml file
+    private void isApiKeyPresent() {
+        // checks to see if the API KEY values are the same
+        if (getString(R.string.api_key).equals(getString(R.string.api_test_value))) {
+            // if they are the same, then there is No API KEY and we pop a toast message
             // that says Missing API KEY
-            Toast.makeText(this, R.string.mainActivity_missing_api_key,Toast.LENGTH_LONG)
+            Toast.makeText(this, R.string.mainActivity_missing_api_key, Toast.LENGTH_LONG)
                     .show();
             //hides the spinner, to indicate not searching
             mProgressBar.setVisibility(View.GONE);
         }
-     }
+    }
 
-      //hides the loading indicator
-     private void showMovies()
-     {
+    //hides the loading indicator
+    private void showMovies() {
         // hide the loading indicator
         mProgressBar.setVisibility(View.GONE);
         // show the movie list
         movieListRecyclerView.setVisibility(View.VISIBLE);
-     }
+    }
 
-     //checks the device to see if there is a network connection
-     private boolean getInternetStatus()
-     {
+    //checks the device to see if there is a network connection
+    private boolean getInternetStatus() {
         // opens a dialog to the phone about its connection to the network
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-         // gets an instance of the NetworkInfo.class
+        // gets an instance of the NetworkInfo.class
         NetworkInfo networkInfo = null;
-         // checks to see if the connectivity manager is available
-        if (connectivityManager != null)
-        {
+        // checks to see if the connectivity manager is available
+        if (connectivityManager != null) {
             //asks the phone if it has a network connection
             networkInfo = connectivityManager.getActiveNetworkInfo();
         }
         // returns true  if network information is not null and the network is connected
         // does not test internet access, it could be blocked!, but not likely...
-        return networkInfo != null && networkInfo.isConnected();
-     }
-     @Override
-     public boolean onCreateOptionsMenu(Menu menu)
-     {
+        return (networkInfo != null && networkInfo.isConnected());
+    }
+
+    // creates the options menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
         // Use AppCompatActivity's method getMenuInflater to get a handle on the menu inflater
         MenuInflater inflater = getMenuInflater();
         // Use the inflater's inflate method to inflate our menu layout to this menu
         inflater.inflate(R.menu.options, menu);
         // Return true so that the menu is displayed in the Toolbar
         return true;
-     }
+    }
 
-     @Override
-     public boolean onOptionsItemSelected(MenuItem item)
-     {
+    // directs the menu item clicks
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
         // get the id of the menu item selected
         int id = item.getItemId();
         // parse the menu item for which item was clicked,
         // technically a switch statement might be better
-        if (id == R.id.popular_movies)
-        {
-            //TODO finish comments
+        if (id == R.id.popular_movies) {
+            //set title of the actionBar to popular movies
             getSupportActionBar().setTitle(R.string.title_popular_movies);
+            //makes the call that retrieves the resultsList of popular movie objects
             getMovieJson(getString(R.string.themoviedb_sort_by_popular));
+            // returns done
             return true;
         }
-        if (id == R.id.top_rated)
-        {
+        if (id == R.id.top_rated) {
+            //set title of the actionBar to top movies
             getSupportActionBar().setTitle(R.string.title_top_rated_movies);
+            //makes the call that retrieves the resultsList of top rated movie objects
             getMovieJson(getString(R.string.themoviedb_sort_by_top_rated));
+            // returns done
             return true;
         }
-        if (id == R.id.about)
-        {
+        if (id == R.id.about) {
+            // creates an instance of the AboutDialogFragment
             AboutDialogFragment about = new AboutDialogFragment();
+            // creates an instance of fragmentManager
             FragmentManager manager = getFragmentManager();
-            about.show(manager,"about");
+            //asks to show the about object, tells the manager its tagged as about
+            about.show(manager, "about");
+            //returns done
             return true;
         }
         return super.onOptionsItemSelected(item);
-     }
+    }
 
-     @Override
-     public void onClick(MovieObject movie)
-     {    //
-          Intent intent = new Intent(MainActivity.this,MovieDetailActivity.class);
-          intent.putExtra("title", movie.getTitle());
-          intent.putExtra("overview", movie.getOverview());
-          intent.putExtra("poster_path", movie.getPosterPath());
-          intent.putExtra("release_date", movie.getReleaseDate());
-          intent.putExtra("rating", movie.getVoteAverage());
-          startActivity(intent);
-     }
+    // when a movie is clicked
+    @Override
+    public void onClick(MovieObject movie) {
+        // creates an intent that will open a Movie Detail Activity
+        Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
+        // add extra data/title to the intent, labeled title
+        intent.putExtra("title", movie.getTitle());
+        // add extra data/overview to the intent, labeled overview
+        intent.putExtra("overview", movie.getOverview());
+        // add extra data/poster_path to the intent, labeled poster_path
+        intent.putExtra("poster_path", movie.getPosterPath());
+        // add extra data/release_date to the intent, labeled release_date
+        intent.putExtra("release_date", movie.getReleaseDate());
+        // add extra data/rating to the intent, labeled rating
+        intent.putExtra("rating", movie.getVoteAverage());
+        //opens movieDetailActivity and sends the extra data attached
+        startActivity(intent);
+    }
 }
 
 

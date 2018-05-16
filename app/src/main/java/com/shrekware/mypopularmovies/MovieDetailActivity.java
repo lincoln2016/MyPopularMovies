@@ -27,29 +27,31 @@
 package com.shrekware.mypopularmovies;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
 import com.squareup.picasso.Picasso;
+
 import java.util.Objects;
 
-public class MovieDetailActivity extends AppCompatActivity
-{
+public class MovieDetailActivity extends AppCompatActivity {
     private ImageView image;
     private RatingBar ratingBar;
     private Intent intent;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // sets the UI view to the activity movie detail layout
         setContentView(R.layout.activity_movie_detail);
+        // retrieves the intent and its packaged data
         intent = getIntent();
         // hides the support bar , if not null
         Objects.requireNonNull(getSupportActionBar()).hide();
-        //imageView for the movie poster
+        // finds the imageView for the movie poster
         image = findViewById(R.id.image_movie_detail);
         //textView for the movie title
         TextView movieTitle = findViewById(R.id.tv_movie_title);
@@ -59,22 +61,21 @@ public class MovieDetailActivity extends AppCompatActivity
         TextView releaseDate = findViewById(R.id.tv_release_date);
         // a 10 star - view only rating bar
         ratingBar = findViewById(R.id.ratingBar);
-        // sets the ratting stars value
+        // sets the rating stars value
         setStars();
-        // sets te poster path to image
+        // gets the poster path and displays image in layout
         setImage();
         // sets the movie title
         movieTitle.setText(intent.getStringExtra("title"));
         // sets the movie description
         movieOverview.setText(intent.getStringExtra("overview"));
         // gets the release date string and the movie release date
-        String rDate = getString(R.string.movie_detail_release_date_string)+intent.getStringExtra("release_date");
+        String rDate = getString(R.string.movie_detail_release_date_string) + intent.getStringExtra("release_date");
         // set the movie release date
         releaseDate.setText(rDate);
     }
 
-    private void setImage()
-    {
+    private void setImage() {
         // string to get the poster path from the movie object
         String Poster = intent.getStringExtra("poster_path");
         // you will need a ‘size’, which will be one of the following:
@@ -82,13 +83,12 @@ public class MovieDetailActivity extends AppCompatActivity
         // or "original". For most phones we recommend using “w185”
         final String imageSize = getString(R.string.themoviedb_image_size);
         //the complete poster path for Picasso to use
-        final String PosterPath = getString(R.string.themoviedb_base_image_url)+ imageSize + Poster;
+        final String PosterPath = getString(R.string.themoviedb_base_image_url) + imageSize + Poster;
         //ask Picasso to do the heavy lifting, getting the pictures and load them into image
         Picasso.get().load(PosterPath).placeholder(R.mipmap.loading_please_wait).fit().into(image);
     }
 
-    private void setStars()
-    {
+    private void setStars() {
         //get rating from intent, which was acquired by the movie object
         //the vote_average from the movie object
         double rating = intent.getDoubleExtra("rating", 0);

@@ -26,7 +26,6 @@
 
 package com.shrekware.mypopularmovies;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -35,36 +34,32 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import com.shrekware.mypopularmovies.R;
+
 /*
-*  this class is used to show the about page
-*  as an alert notification with custom layout
-*/
-public class AboutDialogFragment extends DialogFragment
-{
+ *  this class is used to show the about page
+ *  as an alert notification with custom layout
+ */
+public class AboutDialogFragment extends DialogFragment {
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState)
-    {
-        // Use the Builder class for convenient dialog construction
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // Use the Builder class for convenient dialog construction, adds a theme number
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), 3);
         // get an instance of layout inflater
-        LayoutInflater imageInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater imageInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         // get a reference to the custom layout to display theMovieDB logo and powered by message
-        @SuppressLint("InflateParams") View imageView = imageInflater.inflate(R.layout.about_image_layout,null);
+        View imageView = imageInflater.inflate(R.layout.about_image_layout, null);
         // adds the message to the alert window
         builder.setMessage(R.string.about_app_message)
                 // adds the custom layout to the alert window
                 .setView(imageView)
                 //adds ok button, really just to make people feel better
                 // so they can click something to get rid of alert
-                .setPositiveButton("ok", new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int id)
-                    {
+                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                         // if the ok button is clicked, currently it just closes the window
                     }
                 });
-        // Create the AlertDialog object and return it
+        // Create the AlertDialog object and return it to view
         return builder.create();
     }
 }
