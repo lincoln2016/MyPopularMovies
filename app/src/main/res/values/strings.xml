@@ -29,9 +29,8 @@
     <string name="app_name">MyPopularMovies</string>
 
     <string name="api_key">Your API KEY Here</string>
-    <string name="api_test_value">Your API KEY Here</string>
-    <string name="mainActivity_missing_api_key">Missing API KEY</string>
 
+    <string name="mainActivity_missing_api_key">Missing API KEY</string>
     <string name="title_popular_movies">Popular Movies</string>
     <string name="title_top_rated_movies">Top Rated Movies</string>
 
@@ -56,4 +55,6 @@
         MyPopularMovie uses themoviedb.org API for all movie data,
         for more information,\n contact henry@shrekware.com\n</string>
     <string name="logo_powered_by_www_themoviedb_org">Powered by www.themoviedb.org</string>
+    <string name="api_test_value">Your API KEY Here</string>
+    <string name="title_movie_details">Movie Details</string>
 </resources>

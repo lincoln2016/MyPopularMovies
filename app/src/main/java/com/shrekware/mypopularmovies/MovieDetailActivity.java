@@ -28,7 +28,10 @@ package com.shrekware.mypopularmovies;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -50,8 +53,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         // retrieves the intent and its packaged data
         Intent intent = getIntent();
         movie = intent.getParcelableExtra("movie");
-        // hides the support bar , if not null
-        Objects.requireNonNull(getSupportActionBar()).hide();
+        //set title on support bar to Movie Details
+        getSupportActionBar().setTitle(R.string.title_movie_details);
         // finds the imageView for the movie poster
         image = findViewById(R.id.image_movie_detail);
         //textView for the movie title
@@ -96,5 +99,33 @@ public class MovieDetailActivity extends AppCompatActivity {
         // setting te amount of stars per rating, most of the work
         // here is done in the activity_movie_detail.xml file
         ratingBar.setRating((float) rating);
+    }
+
+    //this is for the home button action to go
+    // back to the previous activity results
+    // and not restart the main activity
+    @Override
+    public void onBackPressed() {
+        //this is only needed if you have specific things
+        //that you want to do when the user presses the back button.
+        /* your specific things...*/
+        super.onBackPressed();
+    }
+
+   //adding activity to the manifest adds the home/back arrow
+    // we add the selection of the home button to simulate the back button
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // checks the menu item id that was clicked
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                // run the on Back pressed method, that goes back one screen
+                onBackPressed();
+                //return done
+                return true;
+        }
+        //if no known items are selected it runs its default behavior
+        return super.onOptionsItemSelected(item);
     }
 }
