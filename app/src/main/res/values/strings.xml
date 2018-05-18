@@ -38,7 +38,6 @@
     <string name="themoviedb_base_image_url">http://image.tmdb.org/t/p/</string>
     <string name="themoviedb_image_size">w342/</string>
 
-
     <string name="movie_poster_image">movie poster image</string>
     <string name="themoviedb_sort_by_popular">popular</string>
     <string name="themoviedb_sort_by_top_rated">top_rated</string>
@@ -51,7 +50,7 @@
 
     <string name="about">About</string>
     <string name="about_app_message">MyPopularMovie Application\n
-        version 1.0\n\n
+        version 2.0\n\n
         Copyright  2018 Henry Ayers.\n
         All rights reserved.\n\n
         MyPopularMovie uses themoviedb.org API for all movie data,

@@ -33,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.shrekware.mypopularmovies.retrofitstuff.MovieObject;
 import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
@@ -40,15 +41,15 @@ import java.util.Objects;
 public class MovieDetailActivity extends AppCompatActivity {
     private ImageView image;
     private RatingBar ratingBar;
-    private Intent intent;
-
+    private MovieObject movie;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // sets the UI view to the activity movie detail layout
         setContentView(R.layout.activity_movie_detail);
         // retrieves the intent and its packaged data
-        intent = getIntent();
+        Intent intent = getIntent();
+        movie = intent.getParcelableExtra("movie");
         // hides the support bar , if not null
         Objects.requireNonNull(getSupportActionBar()).hide();
         // finds the imageView for the movie poster
@@ -65,19 +66,19 @@ public class MovieDetailActivity extends AppCompatActivity {
         setStars();
         // gets the poster path and displays image in layout
         setImage();
-        // sets the movie title
-        movieTitle.setText(intent.getStringExtra("title"));
+        // sets the movie title    intent.getStringExtra("title")
+        movieTitle.setText(movie.getTitle());
         // sets the movie description
-        movieOverview.setText(intent.getStringExtra("overview"));
+        movieOverview.setText(movie.getOverview());
         // gets the release date string and the movie release date
-        String rDate = getString(R.string.movie_detail_release_date_string) + intent.getStringExtra("release_date");
+        String rDate = getString(R.string.movie_detail_release_date_string) + movie.getReleaseDate();
         // set the movie release date
         releaseDate.setText(rDate);
     }
 
     private void setImage() {
         // string to get the poster path from the movie object
-        String Poster = intent.getStringExtra("poster_path");
+        String Poster = movie.getPosterPath();
         // you will need a ‘size’, which will be one of the following:
         // "w92", "w154", "w185", "w342", "w500", "w780",
         // or "original". For most phones we recommend using “w185”
@@ -91,7 +92,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private void setStars() {
         //get rating from intent, which was acquired by the movie object
         //the vote_average from the movie object
-        double rating = intent.getDoubleExtra("rating", 0);
+        double rating = movie.getVoteAverage();
         // setting te amount of stars per rating, most of the work
         // here is done in the activity_movie_detail.xml file
         ratingBar.setRating((float) rating);

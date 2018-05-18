@@ -33,6 +33,7 @@ import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -44,14 +45,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import com.shrekware.mypopularmovies.retrofitstuff.MovieListObject;
 import com.shrekware.mypopularmovies.retrofitstuff.MovieObject;
 import com.shrekware.mypopularmovies.retrofitstuff.RetrofitClient;
-
 import java.util.List;
 import java.util.Objects;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -287,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     @Override
     public void onClick(MovieObject movie) {
         // creates an intent that will open a Movie Detail Activity
-        Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
+/*        Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
         // add extra data/title to the intent, labeled title
         intent.putExtra("title", movie.getTitle());
         // add extra data/overview to the intent, labeled overview
@@ -299,6 +297,10 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         // add extra data/rating to the intent, labeled rating
         intent.putExtra("rating", movie.getVoteAverage());
         //opens movieDetailActivity and sends the extra data attached
+        startActivity(intent);
+*/
+        Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
+        intent.putExtra("movie", (Parcelable) movie);
         startActivity(intent);
     }
 }

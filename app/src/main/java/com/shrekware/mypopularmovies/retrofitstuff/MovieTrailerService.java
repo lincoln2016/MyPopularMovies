@@ -28,18 +28,30 @@ package com.shrekware.mypopularmovies.retrofitstuff;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
-
 /*
- * This interface is used with the Retrofit client as the service, the client will use
- * to retrieve the most popular movies list from theMovieDB
+ * This interface is used with the Retrofit client as a service, the Retrofit client will use
+ * the service to retrieve the trailers and review for the movie object clicked
  */
+public interface MovieTrailerService {
 
-public interface MovieListService {
-    //  builds the query part of the path for theMovieDB.org API call for popular movies
-    @GET("/3/movie/popular")
-    Call<MovieListObject> getPopularMovies(@Query("api_key") String api_key);
-    //  builds the query part of the path for theMovieDB.org API call for top rated movies
-    @GET("/3/movie/top_rated")
-    Call<MovieListObject> getTopRatedMovies(@Query("api_key") String api_key);
+    // a reference call
+    Call<MovieListObject> getAllMovies(@Query("api_key") String api_key, @Query("language") String language, @Query("sort_by") String sort_by,
+                                               @Query("include_adult")String include_adult, @Query("include_video") String include_video,
+                                               @Query("page") String page);
+
+
+    //  builds the query part of the path for theMovieDB.org API call
+    //  that returns the trailers for the movie object clicked, it adds the id of the movie to the path
+    //  and the api key as a query parameter
+    @GET("/3/movie/{id}/videos")
+    Call<MovieListObject> getMovieTrailers(@Path("id") int id, @Query("api_key") String api_key);
+
+    //  builds the query part of the path for theMovieDB.org API call
+    //  that returns the reviews for the movie object clicked, it adds the id of the movie to the path
+    //  and the api key as a query parameter
+    @GET("/3/movie/{id}/reviews")
+    Call<MovieListObject> getMovieReviews(@Path("id") int id,@Query("api_key") String api_key);
+
 }

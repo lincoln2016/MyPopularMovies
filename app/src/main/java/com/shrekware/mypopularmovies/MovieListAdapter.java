@@ -40,7 +40,8 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 /*
- * this class is for the adapter layout that the recyclerView uses to inflate each position
+ * this class is for the adapter layout that the Main Activity recycler GridView uses to
+ * inflate each movie poster and listen for a click to show the movie details
  */
 public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.ViewHolder> {
     // create a List for the movieDetail objects

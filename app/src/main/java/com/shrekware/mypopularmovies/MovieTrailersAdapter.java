@@ -24,22 +24,54 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.shrekware.mypopularmovies.retrofitstuff;
+package com.shrekware.mypopularmovies;
 
-import retrofit2.Call;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.ViewGroup;
 
 /*
- * This interface is used with the Retrofit client as the service, the client will use
- * to retrieve the most popular movies list from theMovieDB
- */
+ * this class is for the adapter layout
+ * that the MovieDetail trailers recyclerView
+ * uses to inflate each position
+*/
+public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieListAdapter.ViewHolder> {
 
-public interface MovieListService {
-    //  builds the query part of the path for theMovieDB.org API call for popular movies
-    @GET("/3/movie/popular")
-    Call<MovieListObject> getPopularMovies(@Query("api_key") String api_key);
-    //  builds the query part of the path for theMovieDB.org API call for top rated movies
-    @GET("/3/movie/top_rated")
-    Call<MovieListObject> getTopRatedMovies(@Query("api_key") String api_key);
+    /*
+     *Constructor for the movie trailers adapter
+     */
+    public MovieTrailersAdapter(  ) {
+
+
+    }
+
+    @NonNull
+    @Override
+    public MovieListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return null;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MovieListAdapter.ViewHolder holder, int position) {
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return 0;
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public ViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        public void onClick(View v) {
+
+        }
+    }
+
+
 }
