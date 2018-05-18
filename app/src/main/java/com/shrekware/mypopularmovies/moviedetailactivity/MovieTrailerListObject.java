@@ -24,58 +24,37 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.shrekware.mypopularmovies;
+package com.shrekware.mypopularmovies.moviedetailactivity;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.view.ViewGroup;
+  import java.util.List;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-import com.shrekware.mypopularmovies.retrofitstuff.MovieObject;
+public class MovieTrailerListObject {
+        // some obscure id, theMovieDB generated
+        @SerializedName("id")
+        @Expose
+        private Integer id;
+        // the list of movie trailer objects returned from the retrofit call
+        @SerializedName("results")
+        @Expose
+        private List<MovieTrailerObject> results = null;
 
-import java.util.List;
-
-/*
- * this class is for the adapter layout
- * that the MovieDetail trailers recyclerView
- * uses to inflate each position
-*/
-public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieListAdapter.ViewHolder> {
-
-    /*
-     *Constructor for the movie trailers adapter
-     */
-    public MovieTrailersAdapter(List<MovieObject> myList, MovieListAdapter.MovieListAdapterOnClickHandler clickHandler  ) {
-
-
-    }
-
-    @NonNull
-    @Override
-    public MovieListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull MovieListAdapter.ViewHolder holder, int position) {
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return 0;
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public ViewHolder(View itemView) {
-            super(itemView);
+        public Integer getId() {
+            return id;
         }
 
-        @Override
-        public void onClick(View v) {
-
+        public void setId(Integer id) {
+            this.id = id;
         }
+
+        public List<MovieTrailerObject> getResults() {
+            return results;
+        }
+
+        public void setResults(List<MovieTrailerObject> results) {
+            this.results = results;
+        }
+
     }
 
-
-}

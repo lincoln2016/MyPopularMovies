@@ -24,7 +24,9 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.shrekware.mypopularmovies.retrofitstuff;
+package com.shrekware.mypopularmovies.moviedetailactivity;
+
+import com.shrekware.mypopularmovies.retrofitstuff.MovieListObject;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -38,8 +40,8 @@ public interface MovieTrailerService {
 
     // a reference call
     Call<MovieListObject> getAllMovies(@Query("api_key") String api_key, @Query("language") String language, @Query("sort_by") String sort_by,
-                                               @Query("include_adult")String include_adult, @Query("include_video") String include_video,
-                                               @Query("page") String page);
+                                       @Query("include_adult")String include_adult, @Query("include_video") String include_video,
+                                       @Query("page") String page);
 
 
     //  builds the query part of the path for theMovieDB.org API call

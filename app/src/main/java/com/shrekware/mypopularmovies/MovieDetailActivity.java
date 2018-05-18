@@ -36,15 +36,18 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.shrekware.mypopularmovies.moviedetailactivity.MovieTrailerObject;
 import com.shrekware.mypopularmovies.retrofitstuff.MovieObject;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
 import java.util.Objects;
 
 public class MovieDetailActivity extends AppCompatActivity {
     private ImageView image;
     private RatingBar ratingBar;
     private MovieObject movie;
+    private List<MovieTrailerObject> trailersList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +80,18 @@ public class MovieDetailActivity extends AppCompatActivity {
         String rDate = getString(R.string.movie_detail_release_date_string) + movie.getReleaseDate();
         // set the movie release date
         releaseDate.setText(rDate);
+        getMovieTrailers();
+    }
+    private void getMovieTrailers(){
+
+
+
+
+
+
+
+
+
     }
 
     private void setImage() {

@@ -285,22 +285,10 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     @Override
     public void onClick(MovieObject movie) {
         // creates an intent that will open a Movie Detail Activity
-/*        Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
-        // add extra data/title to the intent, labeled title
-        intent.putExtra("title", movie.getTitle());
-        // add extra data/overview to the intent, labeled overview
-        intent.putExtra("overview", movie.getOverview());
-        // add extra data/poster_path to the intent, labeled poster_path
-        intent.putExtra("poster_path", movie.getPosterPath());
-        // add extra data/release_date to the intent, labeled release_date
-        intent.putExtra("release_date", movie.getReleaseDate());
-        // add extra data/rating to the intent, labeled rating
-        intent.putExtra("rating", movie.getVoteAverage());
-        //opens movieDetailActivity and sends the extra data attached
-        startActivity(intent);
-*/
         Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
+        // adds the movie object as a parcelable movie object
         intent.putExtra("movie", (Parcelable) movie);
+        //opens movieDetailActivity and sends the extra data
         startActivity(intent);
     }
 }
