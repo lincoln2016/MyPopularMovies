@@ -26,34 +26,7 @@
 
 package com.shrekware.mypopularmovies.moviedetailactivity;
 
-import com.shrekware.mypopularmovies.mainactivity.MovieListObject;
+public class MovieTrailersAdapterOnClickHandler {
 
-import retrofit2.Call;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
-/*
- * This interface is used with the Retrofit client as a service, the Retrofit client will use
- * the service to retrieve the trailers and review for the movie object clicked
- */
-public interface MovieTrailerService {
-
-    // a reference call
-    Call<MovieListObject> getAllMovies(@Query("api_key") String api_key, @Query("language") String language, @Query("sort_by") String sort_by,
-                                       @Query("include_adult")String include_adult, @Query("include_video") String include_video,
-                                       @Query("page") String page);
-
-
-    //  builds the query part of the path for theMovieDB.org API call
-    //  that returns the trailers for the movie object clicked, it adds the id of the movie to the path
-    //  and the api key as a query parameter
-    @GET("/3/movie/{id}/videos")
-    Call<MovieTrailerListObject> getMovieTrailers(@Path("id") int id, @Query("api_key") String api_key);
-
-    //  builds the query part of the path for theMovieDB.org API call
-    //  that returns the reviews for the movie object clicked, it adds the id of the movie to the path
-    //  and the api key as a query parameter
-    @GET("/3/movie/{id}/reviews")
-    Call<MovieReviewListObject> getMovieReviews(@Path("id") int id,@Query("api_key") String api_key);
 
 }

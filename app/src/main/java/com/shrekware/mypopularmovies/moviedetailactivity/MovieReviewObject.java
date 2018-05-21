@@ -26,34 +26,62 @@
 
 package com.shrekware.mypopularmovies.moviedetailactivity;
 
-import com.shrekware.mypopularmovies.mainactivity.MovieListObject;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-import retrofit2.Call;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
 /*
- * This interface is used with the Retrofit client as a service, the Retrofit client will use
- * the service to retrieve the trailers and review for the movie object clicked
- */
-public interface MovieTrailerService {
+* Class for the Movie Review objects retrieved from the retrofit call
+* and parsed with gson, used in movie detail activity
+* Review RecyclerView to display the reviews
+*/
 
-    // a reference call
-    Call<MovieListObject> getAllMovies(@Query("api_key") String api_key, @Query("language") String language, @Query("sort_by") String sort_by,
-                                       @Query("include_adult")String include_adult, @Query("include_video") String include_video,
-                                       @Query("page") String page);
+    public class MovieReviewObject {
+
+        @SerializedName("author")
+        @Expose
+        private String author;
+        @SerializedName("content")
+        @Expose
+        private String content;
+        @SerializedName("id")
+        @Expose
+        private String id;
+        @SerializedName("url")
+        @Expose
+        private String url;
+
+        public String getAuthor() {
+            return author;
+        }
+
+        public void setAuthor(String author) {
+            this.author = author;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+    }
 
 
-    //  builds the query part of the path for theMovieDB.org API call
-    //  that returns the trailers for the movie object clicked, it adds the id of the movie to the path
-    //  and the api key as a query parameter
-    @GET("/3/movie/{id}/videos")
-    Call<MovieTrailerListObject> getMovieTrailers(@Path("id") int id, @Query("api_key") String api_key);
-
-    //  builds the query part of the path for theMovieDB.org API call
-    //  that returns the reviews for the movie object clicked, it adds the id of the movie to the path
-    //  and the api key as a query parameter
-    @GET("/3/movie/{id}/reviews")
-    Call<MovieReviewListObject> getMovieReviews(@Path("id") int id,@Query("api_key") String api_key);
-
-}

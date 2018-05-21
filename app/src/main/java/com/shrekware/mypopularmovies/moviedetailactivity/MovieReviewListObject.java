@@ -24,58 +24,75 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.shrekware.mypopularmovies;
+package com.shrekware.mypopularmovies.moviedetailactivity;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.shrekware.mypopularmovies.retrofitstuff.MovieObject;
 
 import java.util.List;
-
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 /*
- * this class is for the adapter layout
- * that the MovieDetail trailers recyclerView
- * uses to inflate each position
-*/
-public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieListAdapter.ViewHolder> {
+ * Class for the Movie Review List retrieved from the retrofit call
+ * and parsed with gson, used in to retrieve the Reviews for
+ * the movie detail activity
+ * Review RecyclerView to display the reviews
+ */
 
-    /*
-     *Constructor for the movie trailers adapter
-     */
-    public MovieTrailersAdapter(List<MovieObject> myList, MovieListAdapter.MovieListAdapterOnClickHandler clickHandler  ) {
+public class MovieReviewListObject {
 
+        @SerializedName("id")
+        @Expose
+        private Integer id;
+        @SerializedName("page")
+        @Expose
+        private Integer page;
+        @SerializedName("results")
+        @Expose
+        private List<MovieReviewObject> results = null;
+        @SerializedName("total_pages")
+        @Expose
+        private Integer totalPages;
+        @SerializedName("total_results")
+        @Expose
+        private Integer totalResults;
 
-    }
-
-    @NonNull
-    @Override
-    public MovieListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull MovieListAdapter.ViewHolder holder, int position) {
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return 0;
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public ViewHolder(View itemView) {
-            super(itemView);
+        public Integer getId() {
+            return id;
         }
 
-        @Override
-        public void onClick(View v) {
-
+        public void setId(Integer id) {
+            this.id = id;
         }
+
+        public Integer getPage() {
+            return page;
+        }
+
+        public void setPage(Integer page) {
+            this.page = page;
+        }
+
+        public List<MovieReviewObject> getResults() {
+            return results;
+        }
+
+        public void setResults(List<MovieReviewObject> results) {
+            this.results = results;
+        }
+
+        public Integer getTotalPages() {
+            return totalPages;
+        }
+
+        public void setTotalPages(Integer totalPages) {
+            this.totalPages = totalPages;
+        }
+
+        public Integer getTotalResults() {
+            return totalResults;
+        }
+
+        public void setTotalResults(Integer totalResults) {
+            this.totalResults = totalResults;
+        }
+
     }
-
-
-}

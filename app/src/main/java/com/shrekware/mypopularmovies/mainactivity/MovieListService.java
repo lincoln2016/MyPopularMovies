@@ -24,63 +24,22 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.shrekware.mypopularmovies.retrofitstuff;
+package com.shrekware.mypopularmovies.mainactivity;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 /*
- *   The Movie List object is retrieved from theMovieDB.org
- *   it contains all the general information for the list of movie
- *   objects
+ * This interface is used with the Retrofit client as the service, the client will use
+ * to retrieve the most popular movies list from theMovieDB
  */
-public class MovieListObject {
 
-    @SerializedName("page")
-    @Expose
-    private Integer page;
-    @SerializedName("total_results")
-    @Expose
-    private Integer totalResults;
-    @SerializedName("total_pages")
-    @Expose
-    private Integer totalPages;
-    @SerializedName("results")
-    @Expose
-    private List<MovieObject> results = null;
-
-    public Integer getPage() {
-        return page;
-    }
-
-    public void setPage(Integer page) {
-        this.page = page;
-    }
-
-    public Integer getTotalResults() {
-        return totalResults;
-    }
-
-    public void setTotalResults(Integer totalResults) {
-        this.totalResults = totalResults;
-    }
-
-    public Integer getTotalPages() {
-        return totalPages;
-    }
-
-    public void setTotalPages(Integer totalPages) {
-        this.totalPages = totalPages;
-    }
-
-    public List<MovieObject> getResults() {
-        return results;
-    }
-
-    public void setResults(List<MovieObject> results) {
-        this.results = results;
-    }
-
+public interface MovieListService {
+    //  builds the query part of the path for theMovieDB.org API call for popular movies
+    @GET("/3/movie/popular")
+    Call<MovieListObject> getPopularMovies(@Query("api_key") String api_key);
+    //  builds the query part of the path for theMovieDB.org API call for top rated movies
+    @GET("/3/movie/top_rated")
+    Call<MovieListObject> getTopRatedMovies(@Query("api_key") String api_key);
 }

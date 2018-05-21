@@ -45,9 +45,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import com.shrekware.mypopularmovies.retrofitstuff.MovieListObject;
-import com.shrekware.mypopularmovies.retrofitstuff.MovieObject;
-import com.shrekware.mypopularmovies.retrofitstuff.RetrofitClient;
+
+import com.shrekware.mypopularmovies.mainactivity.MovieListAdapter;
+import com.shrekware.mypopularmovies.mainactivity.MovieListObject;
+import com.shrekware.mypopularmovies.mainactivity.MovieObject;
+import com.shrekware.mypopularmovies.mainactivity.RetrofitClient;
 import java.util.List;
 import java.util.Objects;
 import retrofit2.Call;
@@ -218,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     }
 
     //checks the device to see if there is a network connection
-    private boolean getInternetStatus() {
+    public boolean getInternetStatus() {
         // opens a dialog to the phone about its connection to the network
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -24,7 +24,7 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.shrekware.mypopularmovies;
+package com.shrekware.mypopularmovies.moviedetailactivity;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -33,125 +33,111 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.shrekware.mypopularmovies.retrofitstuff.MovieObject;
+import com.shrekware.mypopularmovies.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 /*
- * this class is for the adapter layout that the Main Activity recycler GridView uses to
- * inflate each movie poster and listen for a click to show the movie details
- */
-public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.ViewHolder> {
+ * this class is for the adapter layout
+ * that the MovieDetail trailers recyclerView
+ * uses to inflate each position
+*/
+public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdapter.ViewHolder> {
     // create a List for the movieDetail objects
-    final private List<MovieObject> myListOfMovies;
+    final private List<MovieTrailerObject> myListOfTrailers;
     // create an ImageView called image
     private ImageView image;
     // create a MovieListAdapter OnClickHandler
-    final private MovieListAdapterOnClickHandler myOnClickHandler;
+    final private MovieTrailersAdapter.MovieTrailersAdapterOnClickHandler myOnClickHandler;
+    //textview for the trailer title
+    private TextView trailerName;
+    //textView for the trailer type
+    private TextView trailerType;
 
     /*
-     * Constructor using the List of Movie Objects and a clickHandler
+     *Constructor for the movie trailers adapter
      */
-    public MovieListAdapter(List<MovieObject> myList, MovieListAdapterOnClickHandler clickHandler) {
+    public MovieTrailersAdapter(List<MovieTrailerObject> myList, MovieTrailersAdapter.MovieTrailersAdapterOnClickHandler clickHandler  ) {
         //set the local list of Movies to the offered list
-        myListOfMovies = myList;
+        myListOfTrailers = myList;
         // sets the local MovieListAdapter OnClickHandler to offered clickHandler
         myOnClickHandler = clickHandler;
+
     }
 
-    /*
-     * creates the view holder
-     */
     @NonNull
     @Override
-    public MovieListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //  myListOfMovies.clear();
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        //
         Context context = parent.getContext();
         // Get the RecyclerView item layout
         LayoutInflater inflater = LayoutInflater.from(context);
         // sets the view to the movie item layout
-        View view = inflater.inflate(R.layout.movie_item_layout, parent, false);
+        View view = inflater.inflate(R.layout.movie_trailers_item, parent, false);
         // returns the view that will be used in the recyclerView
-        return new ViewHolder(view);
+        return new MovieTrailersAdapter.ViewHolder(view);
     }
 
-    /*
-     *    Overrides the binding
-     *    movie info to the layout
-     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        // get a reference to the viewHolder
-        image = holder.itemView.findViewById(R.id.movie_imageView);
-        //obtain an instance of the movie object and get the poster path
-        MovieObject myMovie = myListOfMovies.get(position);
-        //you will need a ‘size’, which will be one of the following:
-        //"w92", "w154", "w185", "w342", "w500", "w780",
-        // or "original". For most phones we recommend using “w185”
-        final String imageSize = MainActivity.resources.getString(R.string.themoviedb_image_size);
-        //the complete poster path used to retrieve the image
-        final String PosterPath = MainActivity.resources.getString(R.string.themoviedb_base_image_url) + imageSize + myMovie.getPosterPath();
-        Picasso.get().load(PosterPath).placeholder(R.mipmap.loading_please_wait).fit().into(image);
-        // didn't work on lollipop  no .fit??
-        //TODO  add exception for Lollipop, below looks better
-        // Picasso.get().load(PosterPath).placeholder(R.drawable.ic_launcher_foreground).into(image);
+        image = holder.itemView.findViewById(R.id.imageView_movie_trailer);
+        trailerName = holder.itemView.findViewById(R.id.tv_trailer_title);
+        trailerType = holder.itemView.findViewById(R.id.tv_trailer_type);
+        MovieTrailerObject myTrailer = myListOfTrailers.get(position);
+        trailerName.setText(myTrailer.getName());
+        //string for the trailer type name and then type
+        String myType = "Type: "+myTrailer.getType();
+        trailerType.setText(myType);
+        String youTube = "https://img.youtube.com/vi/"+myTrailer.getKey()+"/mqdefault.jpg";
+        Picasso.get().load(youTube).placeholder(R.mipmap.loading_please_wait).into(image);
+
     }
 
-    //counts the items, to keep track of size of list
     @Override
     public int getItemCount() {
         //if there are items in the list, we count them
-        if (myListOfMovies != null) {
+        if (myListOfTrailers != null) {
             // return the size of the list
-            return myListOfMovies.size();
+            return myListOfTrailers.size();
         }
         // if there is no list we return a size of 0
         return 0;
     }
 
-    /*
-     * Inner class to hold the views needed to display a movie object in the recycler-view
-     * hold a reference to the onClickListener
-     */
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        /*
-         *  Will display the image of the movie
-         *
-         *  Constructor for our ViewHolder.
-         *  Within this constructor,
-         *  we get a reference to our ImageView
-         */
-        private ViewHolder(View view) {
+        public ViewHolder(View view) {
             super(view);
-            // find the image for the recyclerView
-            image = view.findViewById(R.id.movie_imageView);
+            // find the image for the recyclerView trailer
+            image = view.findViewById(R.id.imageView_movie_trailer);
+            // find the text for the trailer title
+            trailerName = view.findViewById(R.id.tv_trailer_title);
+            // find the textView for the trailer type
+            trailerType = view.findViewById(R.id.tv_trailer_type);
             // sets a listener for clicks on this view, which implements onClick below
             view.setOnClickListener(this);
         }
 
-        /*
-         * The onClick called by the child views during a click. We fetch the movie that has been
-         * selected, and then call the onClick handler registered with this adapter, passing the
-         * movie object fetched.
-         */
         @Override
         public void onClick(View v) {
+           //TODO  play trailer
             //on the click of a recyclerView item, we retrieve the
             //movie object in the view clicked
-            MovieObject myMovie = myListOfMovies.get(getAdapterPosition());
+            MovieTrailerObject myTrailer = myListOfTrailers.get(getAdapterPosition());
             // pass the movie object to the instance of the MovieListAdapterOnClickHandler
-            myOnClickHandler.onClick(myMovie);
+            myOnClickHandler.onClick(myTrailer);
+
+
         }
     }
 
-    /*
-     * The interface for the click handler
-     */
-    public interface MovieListAdapterOnClickHandler {
-        //defines the interface methods
-        void onClick(MovieObject movie);
+    public interface MovieTrailersAdapterOnClickHandler {
+        void onClick(MovieTrailerObject myMovieTrailer);
     }
 }
+
+
 

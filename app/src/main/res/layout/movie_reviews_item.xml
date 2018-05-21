@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
   ~ PROJECT LICENSE
   ~ This project was submitted by Henry Ayers as part of the Nanodegree At Udacity.
   ~ As part of Udacity Honor code, your submissions must be your own work,
@@ -23,10 +24,50 @@
   ~ DAMAGES OR OTHER LIABILITY, WHETHER ACTION OF CONTRACT,
   ~ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   -->
+<!-- Review Item Layout used in the recyclerView for the Movie Detail Activity -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:divider="?android:dividerHorizontal">
+<!-- textView for the author of the review used in the recyclerView for the Movie Detail Activity -->
 
-<resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="movie_detail_titles_color">#00004d</color>
-</resources>
+    <TextView
+        android:layout_marginStart="4dp"
+        android:id="@+id/tv_review_author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="textStart"
+        android:textSize="16sp"
+        android:layout_marginBottom="6dp"
+        android:textColor="@color/colorPrimaryDark"/>
+
+
+    <!-- textView for the review used in the recyclerView for the Movie Detail Activity
+          Review RecyclerView -->
+
+    <TextView
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="12dp"
+        android:textSize="14sp"
+        android:id="@+id/tv_review_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        />
+
+
+
+
+
+    <View
+
+        android:background="@color/movie_detail_titles_color"
+        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="4dp"
+        android:layout_margin="4dp"
+        />
+
+
+</LinearLayout>

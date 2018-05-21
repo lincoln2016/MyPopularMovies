@@ -24,7 +24,7 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.shrekware.mypopularmovies.retrofitstuff;
+package com.shrekware.mypopularmovies.mainactivity;
 
 import android.os.Parcel;
 import android.os.Parcelable;

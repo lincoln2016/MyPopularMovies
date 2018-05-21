@@ -26,7 +26,7 @@
 
 <resources>
     <string name="app_name">MyPopularMovies</string>
-    <!--*******************  THIS API KEY NEEDS REPLACEMENT *****-->
+    <!--***********THIS API KEY NEEDS REPLACEMENT *****-->
     <string name="api_key">Your API KEY Here</string>
 
     <!--  activity support action bar                 -->
@@ -58,6 +58,10 @@
         MyPopularMovie uses themoviedb.org API for all movie data,
         for more information,\n contact henry@shrekware.com\n</string>
     <string name="logo_powered_by_www_themoviedb_org">Powered by www.themoviedb.org</string>
-    <!--  the MovieDB api key test value, do not change-->
+    <!--  the MovieDB api key test value, it tests if you changed the api key
+          Do Not Change!! not the api key needed to be changed-->
     <string name="api_test_value">Your API KEY Here</string>
+    <string name="movie_detail_trailers">Trailers</string>
+    <string name="movie_detail_reviews">Reviews</string>
+    <string name="movie_detail_no_reviews">sorry, no Reviews</string>
 </resources>

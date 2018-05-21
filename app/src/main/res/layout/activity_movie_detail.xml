@@ -24,25 +24,25 @@
   ~ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   -->
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.shrekware.mypopularmovies.MovieDetailActivity">
-
+    <!--android:fillViewport="true"-->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
+            android:textColor="@color/movie_detail_titles_color"
             android:id="@+id/tv_movie_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:textAlignment="center"
-            android:textColor="@color/colorPrimaryDark"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -79,6 +79,7 @@
             android:layout_gravity="bottom"
             android:layout_marginStart="6dp"
             android:layout_marginTop="12dp"
+            android:id="@+id/tv_average_user_rating"
             android:text="@string/average_user_rating"
             android:textColor="@android:color/holo_red_dark" />
 
@@ -93,12 +94,58 @@
             android:numStars="10"
             android:stepSize=".1" />
 
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:textAlignment="center"
+            android:textColor="@color/movie_detail_titles_color"
+            android:text="@string/movie_detail_trailers"/>
+
+
         <android.support.v7.widget.RecyclerView
+            android:layout_marginTop="6dp"
             android:id="@+id/recyclerView_movieTrailers"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:nestedScrollingEnabled="false"
+             />
+        <TextView
+            android:id="@+id/tv_main_title_reviews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textAlignment="center"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/movie_detail_titles_color"
+            android:text="@string/movie_detail_reviews"/>
+        <TextView
+
+            android:id="@+id/tv_title_reviews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="16sp"
+            android:layout_marginStart="20dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:text="@string/movie_detail_reviews"/>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_marginTop="6dp"
+            android:id="@+id/recyclerView_movieReviews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:nestedScrollingEnabled="false"
+            />
 
 
     </LinearLayout>
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>
 

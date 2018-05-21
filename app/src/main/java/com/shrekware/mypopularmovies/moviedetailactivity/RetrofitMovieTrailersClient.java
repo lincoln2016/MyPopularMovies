@@ -24,22 +24,49 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.shrekware.mypopularmovies.retrofitstuff;
+package com.shrekware.mypopularmovies.moviedetailactivity;
 
-import retrofit2.Call;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
+import com.shrekware.mypopularmovies.MainActivity;
+import com.shrekware.mypopularmovies.R;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
-/*
- * This interface is used with the Retrofit client as the service, the client will use
- * to retrieve the most popular movies list from theMovieDB
- */
+public class RetrofitMovieTrailersClient {
 
-public interface MovieListService {
-    //  builds the query part of the path for theMovieDB.org API call for popular movies
-    @GET("/3/movie/popular")
-    Call<MovieListObject> getPopularMovies(@Query("api_key") String api_key);
-    //  builds the query part of the path for theMovieDB.org API call for top rated movies
-    @GET("/3/movie/top_rated")
-    Call<MovieListObject> getTopRatedMovies(@Query("api_key") String api_key);
+    // constant string for theMovieDB.org base API URL - https://api.themoviedb.org/
+    private static final String BASE_URL = MainActivity.resources.getString(R.string.retrofit_client_base_url);
+    // creates an instance of the MovieListService which sets up the call for retrofit
+    // the MovieListService includes the API_KEY
+    final private MovieTrailerService movieTrailerService;
+
+    /*
+     * the constructor for the Retrofit Client
+     */
+    public RetrofitMovieTrailersClient() {
+        // creating the retrofit object we will use to call theMovieDB.org
+        Retrofit retrofit = new Retrofit.Builder()
+                //adds base url to the retrofit client
+                .baseUrl(BASE_URL)
+                //adds the Gson converter to the client to interpret the response into Gson notation
+                .addConverterFactory(GsonConverterFactory.create())
+                //builds the retrofit client
+                .build();
+
+        // adds the movie trailer service to the retrofit client
+        movieTrailerService = retrofit.create(MovieTrailerService.class);
+    }
+
+
+    //  the method the retrofit client will call to retrieve the movie trailers list
+    public MovieTrailerService getTrailerService() {
+        //returns the trailers list
+        return movieTrailerService;
+    }
+
+
+
+
+
+
+
 }

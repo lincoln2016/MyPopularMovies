@@ -25,7 +25,7 @@
  */
 
 
-package com.shrekware.mypopularmovies.retrofitstuff;
+package com.shrekware.mypopularmovies.mainactivity;
 
 import com.shrekware.mypopularmovies.MainActivity;
 import com.shrekware.mypopularmovies.R;
@@ -46,7 +46,7 @@ public class RetrofitClient {
     // creates an instance of the MovieListService which sets up the call for retrofit
     // the MovieListService includes the API_KEY
     final private MovieListService movieListService;
-    final private MovieTrailerService movieTrailerService;
+
 
     /*
      * the constructor for the Retrofit Client
@@ -62,8 +62,7 @@ public class RetrofitClient {
                 .build();
         // adds the movie list service to the retrofit client
         movieListService = retrofit.create(MovieListService.class);
-        // adds the movie trailer service to the retrofit client
-        movieTrailerService = retrofit.create(MovieTrailerService.class);
+
     }
 
     //  the method the retrofit client will call to retrieve the full client call
@@ -71,10 +70,6 @@ public class RetrofitClient {
        //returns the list of movies
         return movieListService;
     }
-    //  the method the retrofit client will call to retrieve the movie trailers list
-    public MovieTrailerService getTrailerService() {
-        //returns the trailers list
-        return movieTrailerService;
-    }
+
 
 }
