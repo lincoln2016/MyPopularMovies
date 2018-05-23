@@ -29,7 +29,6 @@ package com.shrekware.mypopularmovies.mainactivity;
 
 import com.shrekware.mypopularmovies.MainActivity;
 import com.shrekware.mypopularmovies.R;
-import com.shrekware.mypopularmovies.moviedetailactivity.MovieTrailerService;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

@@ -36,7 +36,7 @@ import retrofit2.http.Query;
  * This interface is used with the Retrofit client as a service, the Retrofit client will use
  * the service to retrieve the trailers and review for the movie object clicked
  */
-public interface MovieTrailerService {
+public interface MovieDetailsService {
 
     // a reference call
     Call<MovieListObject> getAllMovies(@Query("api_key") String api_key, @Query("language") String language, @Query("sort_by") String sort_by,

@@ -34,10 +34,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.shrekware.mypopularmovies.R;
 import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 /*
@@ -49,14 +47,15 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
     // create a List for the movieDetail objects
     final private List<MovieTrailerObject> myListOfTrailers;
     // create an ImageView called image
-    private ImageView image;
+     private ImageView image;
     // create a MovieListAdapter OnClickHandler
     final private MovieTrailersAdapter.MovieTrailersAdapterOnClickHandler myOnClickHandler;
-    //textview for the trailer title
+    //textView for the trailer title
     private TextView trailerName;
     //textView for the trailer type
     private TextView trailerType;
-
+    // get application context
+    private Context context;
     /*
      *Constructor for the movie trailers adapter
      */
@@ -65,14 +64,12 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
         myListOfTrailers = myList;
         // sets the local MovieListAdapter OnClickHandler to offered clickHandler
         myOnClickHandler = clickHandler;
-
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //
-        Context context = parent.getContext();
+        context = parent.getContext();
         // Get the RecyclerView item layout
         LayoutInflater inflater = LayoutInflater.from(context);
         // sets the view to the movie item layout
@@ -89,9 +86,9 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
         MovieTrailerObject myTrailer = myListOfTrailers.get(position);
         trailerName.setText(myTrailer.getName());
         //string for the trailer type name and then type
-        String myType = "Type: "+myTrailer.getType();
+        String myType = context.getResources().getString(R.string.movie_trailer_type)+myTrailer.getType();
         trailerType.setText(myType);
-        String youTube = "https://img.youtube.com/vi/"+myTrailer.getKey()+"/mqdefault.jpg";
+        String youTube =context.getString(R.string.youtube_image_url_beginning)+myTrailer.getKey()+context.getString(R.string.trailer_image_size_end);
         Picasso.get().load(youTube).placeholder(R.mipmap.loading_please_wait).into(image);
 
     }

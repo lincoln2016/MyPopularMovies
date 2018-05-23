@@ -317,12 +317,12 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         // creates an intent that will open a Movie Detail Activity
         Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
         // adds the movie object as a parcelable movie object
-        intent.putExtra("movie", (Parcelable) movie);
+        intent.putExtra("movie", movie);
         //opens movieDetailActivity and sends the extra data
         startActivity(intent);
     }
     // called when the activity is stopped or destroyed,
-    // save your data here, to restore in onCreatte
+    // save your data here, to restore in onCreate
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putString("sort_by", mySavedState);

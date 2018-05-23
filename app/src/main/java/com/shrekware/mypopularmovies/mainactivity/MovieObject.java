@@ -37,7 +37,7 @@ import java.util.List;
 /*
  * This class is to hold all the information for
  * the movie object, a member of the MovieList, parsed from the results of theMovieDB call
- * this class implements Parceable so we can pass the whole movie object
+ * this class implements Parcelable so we can pass the whole movie object
  * in the intent to the movie detail activity
  */
 public class MovieObject implements Parcelable{

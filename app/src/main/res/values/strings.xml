@@ -64,4 +64,9 @@
     <string name="movie_detail_trailers">Trailers</string>
     <string name="movie_detail_reviews">Reviews</string>
     <string name="movie_detail_no_reviews">sorry, no Reviews</string>
+    <string name="movie_trailers_fetch_error">error for failure to get the movieTrailers List:</string>
+    <string name="movie_reviews_fetch_error">error on the call to retrieve the movie reviews:</string>
+    <string name="movie_trailer_type">Type:</string>
+    <string name="youtube_image_url_beginning">https://img.youtube.com/vi/</string>
+    <string name="trailer_image_size_end">/mqdefault.jpg</string>
 </resources>

@@ -26,18 +26,26 @@
 
 package com.shrekware.mypopularmovies;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -49,9 +57,11 @@ import com.shrekware.mypopularmovies.moviedetailactivity.MovieTrailerListObject;
 import com.shrekware.mypopularmovies.moviedetailactivity.MovieTrailerObject;
 import com.shrekware.mypopularmovies.mainactivity.MovieObject;
 import com.shrekware.mypopularmovies.moviedetailactivity.MovieTrailersAdapter;
-import com.shrekware.mypopularmovies.moviedetailactivity.RetrofitMovieTrailersClient;
+import com.shrekware.mypopularmovies.moviedetailactivity.RetrofitMovieDetailsClient;
 import com.squareup.picasso.Picasso;
+
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,14 +76,14 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
     private String API_KEY;
     // get a reference to this context
     private Context mContext;
-    //the imageView for the movie poster binding to the layout image id
+    // binds the imageView to the movie_detail image
     @BindView(R.id.image_movie_detail)
     ImageView image;
     // a rating bar with 10 stars to show the vote average
-    //binding it to the layout rating bar id
+    // binding it to the layout rating bar id
     @BindView(R.id.ratingBar)
     RatingBar ratingBar;
-    //the movie object displayed in the MovieDetailActivity
+    // the movie object displayed in the MovieDetailActivity
     private MovieObject movie;
     // list of movie trailer objects
     private List<MovieTrailerObject> trailersList;
@@ -82,56 +92,62 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
     // recyclerView for the trailers list and bind it to the recycler trailers id
     @BindView(R.id.recyclerView_movieTrailers)
     RecyclerView movieTrailersRecyclerView;
-    //recyclerView for the reviews list
+    // recyclerView for the reviews list
     @BindView(R.id.recyclerView_movieReviews)
     RecyclerView movieReviewsRecyclerView;
-    //textView for the movie title
+    // textView for the movie title
     @BindView(R.id.tv_movie_title)
     TextView movieTitle;
-    //textView for the movie overview(description)
+    // textView for the movie overview(description)
     @BindView(R.id.tv_movie_overview)
     TextView movieOverview;
-    //textView for the movie release date
+    // textView for the movie release date
     @BindView(R.id.tv_release_date)
     TextView releaseDate;
-    //textView for the average user rating to add the int score to the end of the string
+    // textView for the average user rating to add the int score to the end of the string
     @BindView(R.id.tv_average_user_rating)
     TextView userRatingText;
     @BindView(R.id.tv_main_title_reviews)
     TextView reviewsMainTitle;
     @BindView(R.id.tv_title_reviews)
-    TextView reviewsTitle;
-    // the recyclerView adapter for the movie trailers
-    private MovieTrailersAdapter movieTrailersAdapter;
-    private  MovieReviewsAdapter mReviewAdapter;
+    TextView numberReviews;
+    // favorites add to list button
+    @BindView(R.id.btn_favorite)
+    ImageButton btnFavorite;
+    // share button, shares the first trailer
+    @BindView(R.id.btn_share)
+    ImageButton btnShare;
+
     private MovieReviewListObject reviewListObject;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // sets the UI view to the activity movie detail layout
         setContentView(R.layout.activity_movie_detail);
-        // calls Butterknife to bind the views
+        // calls ButterKnife to bind the views
         ButterKnife.bind(this);
         // gets a reference to app context
         mContext = this;
-        //retrieve api key
+        // retrieve api key
         API_KEY = getString(R.string.api_key);
         // retrieves the intent and its packaged data
         Intent intent = getIntent();
-        //retrieves the attached movie object
+        // retrieves the attached movie object
         movie = intent.getParcelableExtra("movie");
-        //set title on support bar to Movie Details
-        getSupportActionBar().setTitle(movie.getTitle());
+        // set title on support bar to Movie Details
+        Objects.requireNonNull(getSupportActionBar()).setTitle(movie.getTitle());
         // string to add vote average to heading end
         String averageRating = getString(R.string.average_user_rating)+": "+movie.getVoteAverage().toString();
         // setting the userRating textView to the title and vote average
         userRatingText.setText(averageRating);
         // sets the layout manager to a linear layout on this activity
         movieTrailersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        movieTrailersAdapter = new MovieTrailersAdapter(trailersList,null);
+        // instantiates a new instance of the Movie trailers adapter class
+        MovieTrailersAdapter movieTrailersAdapter = new MovieTrailersAdapter(trailersList, null);
+        // sets the adapter to the movie trailers recycler view
         movieTrailersRecyclerView.setAdapter(movieTrailersAdapter);
-        //reviews recyclerView
-        mReviewAdapter = new MovieReviewsAdapter(reviewsList);
+        // reviews recyclerView
+        MovieReviewsAdapter mReviewAdapter = new MovieReviewsAdapter(reviewsList);
         movieReviewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         movieReviewsRecyclerView.setAdapter(mReviewAdapter);
         // sets the rating stars value
@@ -148,75 +164,126 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
         releaseDate.setText(rDate);
         // the retrofit call the returns a list of trailer objects
         getMovieTrailers();
+        // the retrofit call the returns a list of review objects
         getMovieReviews();
+        // sets an onClickListener for the share button
+        btnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            //when the button is clicked
+            public void onClick(View v) {
+                // gets the first trailer key and sends it with the request
+                String trailerKey = trailersList.get(0).getKey();
+                // checks if there is a trailer before sharing
+                if (trailerKey!=null){ getShareIntent(trailerKey);}
+            }
+        });
     }
-    // the method that fetches the movie trailers using retrofit
+    /*
+    * used to share a movie trailer with email,
+    * text or an app available to send a message
+    */
+    private void getShareIntent(String trailerKey){
+       // you will need permission to save the picture,
+       // you cant share a picture without having a local copy of the picture
+       ActivityCompat.requestPermissions(this,
+               new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+       // string for the saved image description
+       String myTitle = movie.getTitle();
+       // get the image from the MovieDetailActivity ImageView
+       Drawable mDrawable = image.getDrawable();
+       // convert the drawable to Bitmap, needed to save the file
+       Bitmap mBitmap = ((BitmapDrawable)mDrawable).getBitmap();
+       // create a string for the path to the saved file,
+       // will be used to share the picture
+       String path = MediaStore.Images.Media.insertImage(getContentResolver(),
+              mBitmap, myTitle, null);
+       // convert the path string to a uri in order to retrieve the image
+       Uri uri = Uri.parse(path);
+       // the string for the first movie trailer, shared as a clickable link
+       String link = "https://www.youtube.com/watch?v=" + trailerKey;
+       // create the intent to share something
+       Intent intent = new Intent(Intent.ACTION_SEND);
+       // set the data shared type to any any, is that a performance issue or a security risk?
+       intent.setType("*/*");
+       // adds a subject, if used in the share medium
+       intent.putExtra(Intent.EXTRA_SUBJECT, myTitle +" trailer was shared with you");
+       // adds the clickable link to the shared message
+       intent.putExtra(Intent.EXTRA_TEXT, link);
+       // adds the picture of the movie poster to the message
+       intent.putExtra(Intent.EXTRA_STREAM, uri);
+       // starts the intent to share the movie trailer
+       startActivity(intent);
+   }
+    /*
+    * the method that fetches the movie trailers using retrofit
+    */
     private void getMovieTrailers()
-     {
-         Log.v(LOG_TAG,"getMovie trailers");
+    {
         //checks if the list of movie trailer objects exists
         if (trailersList != null) {
             //if there is a list, we clear the movie trailer objects from it
             trailersList.clear();
         }
-         Log.v(LOG_TAG,"Retrofit client");
-        // gets an instance of retrofit client
-        RetrofitMovieTrailersClient client = new RetrofitMovieTrailersClient();
-         Log.v(LOG_TAG,"new Retrofit client");
+        // gets an instance of retrofit client for MovieDetails
+        RetrofitMovieDetailsClient client = new RetrofitMovieDetailsClient();
+        //checks if there is an internet connection
         if (getInternetStatus())
-            Log.v(LOG_TAG,"check internet");
         {
-            client.getTrailerService().getMovieTrailers(movie.getId(),API_KEY).enqueue(new Callback<MovieTrailerListObject>()
+            // retrofit client call to get the movie trailers list
+            client.getMovieDetailService().getMovieTrailers(movie.getId(),API_KEY).enqueue(new Callback<MovieTrailerListObject>()
             {
+                // standard on response method
                 @Override
-                public void onResponse(Call<MovieTrailerListObject> call, Response<MovieTrailerListObject> response)
-                {
-                    Log.v(LOG_TAG,"on response movie id: " + movie.getId().toString());
+                public void onResponse(@NonNull Call<MovieTrailerListObject> call, @NonNull Response<MovieTrailerListObject> response)
+                {    // checks if there is a response
                     if (response.body() != null)
                     {
-                          //  Log.v(LOG_TAG,"response: key for you tube: "+ response.body().getResults().get(0).getKey());
-                        // /loads the response into the resultsList
+                        // loads the response into the resultsList
                         trailersList = response.body().getResults();
-                        //adds the resultList to the RecyclerView
+                        //adds the resultList to the RecyclerView and adds an onClickHandler
                         movieTrailersRecyclerView.setAdapter(new MovieTrailersAdapter(trailersList, getTrailersClickHandler()));
                     }
                 }
+                //if the retrofit call fails, we will get a reason why
                 @Override
-                public void onFailure(Call<MovieTrailerListObject> call, Throwable t)
+                public void onFailure(@NonNull Call<MovieTrailerListObject> call, @NonNull Throwable t)
                 {
-                    Log.v(LOG_TAG,"on failure" +t.toString());
+                    // logs the error message on failure
+                    Log.v(LOG_TAG,getString(R.string.movie_trailers_fetch_error) +t.toString());
                 }
             });
         }
-     }
+    }
+    /*
+     * the method that fetches the movie reviews using retrofit
+     */
     private void getMovieReviews()
     {
-        Log.v(LOG_TAG,"getMovie reviews");
         //checks if the list of movie trailer objects exists
         if (reviewsList != null)
         {
-            //if there istis a list, we clear the movie trailer objects from it
+            //if there is a list, we clear the movie trailer objects from it
             reviewsList.clear();
         }
-        Log.v(LOG_TAG,"Retrofit client");
         // gets an instance of retrofit client
-        RetrofitMovieTrailersClient client = new RetrofitMovieTrailersClient();
-        Log.v(LOG_TAG,"new Retrofit client");
+        RetrofitMovieDetailsClient client = new RetrofitMovieDetailsClient();
+        // checks to see if there is an internet connection
         if (getInternetStatus())
         {
-            client.getTrailerService().getMovieReviews(movie.getId(),API_KEY).enqueue(new Callback<MovieReviewListObject>()
+            // the retrofit call to retrieve the movie reviews
+            client.getMovieDetailService().getMovieReviews(movie.getId(),API_KEY).enqueue(new Callback<MovieReviewListObject>()
             {
+                // the response for te call to get movie reviews
                 @Override
-                public void onResponse(Call<MovieReviewListObject> call, Response<MovieReviewListObject> response) {
-                    Log.v(LOG_TAG, "on response movie id: " + movie.getId().toString());
+                public void onResponse(@NonNull Call<MovieReviewListObject> call, @NonNull Response<MovieReviewListObject> response) {
+                    // checks to see if there is a response
                     if (response.body() != null) {
-                        //Log.v(LOG_TAG,"response: key for you tube: "+ response.body().getResults().get(0).getKey());
-                        // /loads the response into the resultsList
+                        // /loads the response into the reviewsList
                         reviewsList = response.body().getResults();
                          // gets the whole object from theMovieDB.org for the
                         // total number of reviews and pages of reviews
                         reviewListObject = response.body();
-
+                        // calls the setReviewTile method which
                         // sets the Review title and fills in the
                         // information of how many reviews and total pages
                       setReviewTitle(reviewListObject);
@@ -224,16 +291,20 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
                         movieReviewsRecyclerView.setAdapter(new MovieReviewsAdapter(reviewsList));
                     }
                 }
+                // if the retrofit call should fail, we log the error message
                 @Override
-                public void onFailure(Call<MovieReviewListObject> call, Throwable t) {
-                        Log.v(LOG_TAG,"on failure" +t.toString());
+                public void onFailure(@NonNull Call<MovieReviewListObject> call, @NonNull Throwable t) {
+                        // logs the error message of why the call didn't complete
+                        Log.v(LOG_TAG,getString(R.string.movie_reviews_fetch_error) +t.toString());
                 }
-
-
             });
         }
     }
-    private void setImage(){
+   /*
+    * used to fetch image and show it in the imageView
+   */
+    private void setImage()
+    {
         // string to get the poster path from the movie object
         String Poster = movie.getPosterPath();
         // you will need a ‘size’, which will be one of the following:
@@ -246,8 +317,11 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
         Picasso.get().load(PosterPath).placeholder(R.mipmap.loading_please_wait).fit().into(image);
     }
 
-    private void setStars() {
-
+    /*
+     * used to set the rating stars to the correct amount
+    */
+    private void setStars()
+    {
         //get rating from intent, which was acquired by the movie object
         //the vote_average from the movie object
         double rating = movie.getVoteAverage();
@@ -255,39 +329,55 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
         // here is done in the activity_movie_detail.xml file
         ratingBar.setRating((float) rating);
     }
+    /*
+     * used to set the Review Title Bar
+     * and the number of reviews with the proper syntax
+     * example of 3 different cases 1 review, 2 reviews, or sorry no reviews
+    */
     private void setReviewTitle(MovieReviewListObject object)
     {
+        // the string for the number of reviews
+        String numberOfReviewsString;
         //if no reviews, hide the number of reviews textView
-        String myReviewsTitle;
+        // and displays no reviews
         if (object.getTotalResults()<1)
         {
-            //hides the textView for number of reviews and pages
-            reviewsTitle.setVisibility(View.GONE);
+            // hides the textView for number of reviews and pages
+            numberReviews.setVisibility(View.GONE);
+            // set the review title to no reviews
             reviewsMainTitle.setText(R.string.movie_detail_no_reviews);
 
         }    //if only 1 page, hides the number of pages
         else if(object.getTotalPages()==1)
         {
+            // set the review title to reviews
              reviewsMainTitle.setText(R.string.movie_detail_reviews);
+             // if only 1 review, sets the number of reviews to review
              if(object.getTotalResults()==1)
              {
-                 myReviewsTitle = reviewListObject.getTotalResults().toString() +" Review";
-                 reviewsTitle.setText(myReviewsTitle);
+                 // removes the "s" from reviews
+                 numberOfReviewsString   = reviewListObject.getTotalResults().toString() +" Review";
+                 // sets the text to 1 review
+                 numberReviews.setText(numberOfReviewsString);
              }
              else
              {
-                 myReviewsTitle = reviewListObject.getTotalResults().toString() +" Reviews";
-                 reviewsTitle.setText(myReviewsTitle);
+                 // gets the number of reviews when more than 1 review
+                 numberOfReviewsString  = reviewListObject.getTotalResults().toString() +" Reviews";
+                 // sets the textView to the number of reviews
+                 numberReviews.setText(numberOfReviewsString);
              }
         }
         else
         {
-              reviewsMainTitle.setText(R.string.movie_detail_reviews);
-              myReviewsTitle = reviewListObject.getTotalResults().toString() +" Reviews, page "+ reviewListObject.getPage().toString()+" of "+ reviewListObject.getTotalPages().toString();
-              reviewsTitle.setText(myReviewsTitle);
+            // defaults to main title is reviews
+            reviewsMainTitle.setText(R.string.movie_detail_reviews);
+            // review string adds the number of pages to the textView
+            numberOfReviewsString = reviewListObject.getTotalResults().toString() +" Reviews, page "+ reviewListObject.getPage().toString()+" of "+ reviewListObject.getTotalPages().toString();
+            // sets the textView to the number of reviews and pages of reviews
+            numberReviews.setText(numberOfReviewsString);
         }
     }
-
      //this is for the home button action to go
      // back to the previous activity results
      // and not restart the main activity
@@ -320,7 +410,9 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
         //returns this for the OnClickHandler
         return this;
     }
-
+   /*
+    *  used to check if the phone has internet access
+   */
     public boolean getInternetStatus() {
         // opens a dialog to the phone about its connection to the network
         ConnectivityManager connectivityManager =
@@ -336,13 +428,14 @@ public class MovieDetailActivity extends AppCompatActivity implements MovieTrail
          // does not test internet access, it could be blocked!, but not likely...
         return (networkInfo != null && networkInfo.isConnected());
     }
-
+    /*
+     *  when a trailer is clicked, opens youtube or a browser to view trailer
+     */
     @Override
     public void onClick(MovieTrailerObject movie) {
-
+       // creates a new intent that sends a URI for a youtube video
       Intent youTubeIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube://" + movie.getKey()));
-
-      //  Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube://" + video_id));
+      // starts the intent to watch the trailer
         startActivity(youTubeIntent);
 
     }

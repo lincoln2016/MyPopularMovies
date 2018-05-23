@@ -28,6 +28,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="com.shrekware.mypopularmovies.MovieDetailActivity">
     <!--android:fillViewport="true"-->
@@ -83,6 +84,7 @@
             android:text="@string/average_user_rating"
             android:textColor="@android:color/holo_red_dark" />
 
+
         <RatingBar
             android:id="@+id/ratingBar"
             style="?android:attr/ratingBarStyleSmall"
@@ -93,6 +95,35 @@
             android:isIndicator="true"
             android:numStars="10"
             android:stepSize=".1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            >
+
+            <ImageButton
+                android:id="@+id/btn_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@android:drawable/ic_input_add"
+                android:backgroundTint="@android:color/holo_orange_light"
+                android:layout_gravity="end"
+                android:layout_weight="1"/>
+
+            <ImageButton
+                android:layout_gravity="start"
+                android:id="@+id/btn_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/colorPrimary"
+                app:srcCompat="@android:drawable/ic_menu_share"
+                android:layout_weight="1"/>
+
+
+        </LinearLayout>
+
 
 
         <TextView
