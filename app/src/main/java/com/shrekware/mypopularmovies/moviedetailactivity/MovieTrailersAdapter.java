@@ -106,7 +106,7 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
 
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             // find the image for the recyclerView trailer
             image = view.findViewById(R.id.imageView_movie_trailer);

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ PROJECT LICENSE
+  ~ This project was submitted by Henry Ayers as part of the Nanodegree At Udacity.
+  ~ As part of Udacity Honor code, your submissions must be your own work,
+  ~ hence submitting this project as yours will cause you to break the Udacity Honor Code
+  ~ and the suspension of your account. Me, the author of the project,
+  ~ allow you to check the code as a reference,
+  ~ but if you submit it, it's your own responsibility if you get expelled.
+  ~
+  ~ Copyright (c) 2018 Henry Ayers
+  ~
+  ~ Besides the above notice, the following license applies and
+  ~ this license notice must be included in all works derived from this project.
+  ~ MIT License Permission is hereby granted, free of charge,
+  ~ to any person obtaining a copy of this software and associated documentation files (the "Software"),
+  ~ to deal in the Software without restriction, including without limitation the rights to use,
+  ~ copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
+  ~ and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+  ~ The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+  ~ INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+  ~ DAMAGES OR OTHER LIABILITY, WHETHER ACTION OF CONTRACT,
+  ~ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+
+<LinearLayout
+    android:layout_marginTop="4dp"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+
+    >
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="3">
+
+
+
+    <ImageView
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="4dp"
+        android:id="@+id/favorites_imageView"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        app:srcCompat="@mipmap/loading_please_wait"
+        android:layout_weight="1"/>
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="2"
+        >
+
+        <TextView
+            android:id="@+id/tv_favorites_title"
+            android:layout_marginStart="4dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:textColor="@color/colorPrimary"
+            android:layout_marginStart="10dp"
+            android:id="@+id/tv_favorites_release_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        />
+        <TextView
+            android:textColor="@color/colorPrimary"
+            android:layout_marginStart="6dp"
+            android:id="@+id/tv_favorites_overview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="4"
+            android:ellipsize="end"
+            android:isScrollContainer="true"
+            />
+
+        <TextView
+            android:textColor="@android:color/holo_red_dark"
+            android:id="@+id/tv_favorites_vote_average"
+            android:layout_marginStart="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            />
+
+
+    </LinearLayout>
+
+</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        >
+        <ImageButton
+            android:id="@+id/favorites_imageButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:srcCompat="@android:drawable/ic_delete"
+            android:layout_weight="1"
+            android:backgroundTint="@android:color/holo_orange_light"/>
+
+        <Button
+            android:id="@+id/favorites_details_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="More"
+            android:layout_weight="1"
+            android:backgroundTint="@android:color/holo_orange_light"
+            />
+    </LinearLayout>
+
+</LinearLayout>

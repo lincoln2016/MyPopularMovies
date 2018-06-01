@@ -64,6 +64,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="8dp"
             android:textColor="@color/colorPrimaryDark" />
 
         <TextView
@@ -102,15 +104,25 @@
             android:orientation="horizontal"
             android:weightSum="2"
             >
-
             <ImageButton
-                android:id="@+id/btn_favorite"
+                android:id="@+id/btn_not_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@android:drawable/ic_input_add"
                 android:backgroundTint="@android:color/holo_orange_light"
                 android:layout_gravity="end"
+                android:visibility="gone"
                 android:layout_weight="1"/>
+
+            <ImageButton
+                android:id="@+id/btn_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@android:drawable/btn_star_big_on"
+                android:backgroundTint="@android:color/holo_orange_light"
+                android:layout_gravity="end"
+                android:layout_weight="1"
+                android:visibility="visible"/>
 
             <ImageButton
                 android:layout_gravity="start"

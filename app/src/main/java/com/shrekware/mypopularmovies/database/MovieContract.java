@@ -24,9 +24,45 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.shrekware.mypopularmovies.moviedetailactivity;
+package com.shrekware.mypopularmovies.database;
 
-public class MovieTrailersAdapterOnClickHandler {
+import android.net.Uri;
+import android.provider.BaseColumns;
+
+public class MovieContract {
+    /*
+     * The "Content authority" is a name for the entire content provider, similar to the
+     * relationship between a domain name and its website. A convenient string to use for the
+     * content authority is the package name for the app, which is guaranteed to be unique on the
+     * Play Store.
+     */
+    public static final String CONTENT_AUTHORITY = "com.shrekware.mypopularmovies.database";
+    /*
+     * Use CONTENT_AUTHORITY to create the base of all URI's which apps will use to contact
+     * the content provider.
+     */
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY+"/"+MovieFavorites.cTABLE_NAME);
+
+/*
+*  class that holds the database column names
+*/
+    public static final class MovieFavorites implements BaseColumns {
+
+    /* The base CONTENT_URI used to query the Movie Database from the content provider */
+    public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+            .build();
 
 
+        public static final String cDATABASE_NAME = "favorites.db";
+        public static final String cTABLE_NAME = "favorites";
+        public static final String cID = "_id";
+        public static final String cMOVIE_ID = "MOVIE_ID";
+        public static final String cTITLE = "TITLE";
+        public static final String cOVERVIEW = "OVERVIEW";
+        public static final String cPOSTER = "POSTERPATH";
+        public static final String cRELEASE_DATE = "RELEASE_DATE";
+        public static final String cVOTE_AVERAGE = "VOTE_AVERAGE";
+
+
+    }
 }
