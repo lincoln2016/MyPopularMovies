@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     // popular or top rated as the state of the activity
     private String mySavedState;
     // MovieListAdapter create
-    public MovieListAdapter myAdapter;
+    private MovieListAdapter myAdapter;
     // loading indicator and the Bind call to mProgressBar
     // create a reference to the spinner used to indicate loading
     @BindView(R.id.progressBar)
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
      * this will get the favorites from the database and
      * display them in the movies recycler view
      */
-    public void getFavorites()
+    private void getFavorites()
     {
        // query the database for all favorites
        Cursor myCursor = getContentResolver().query(MovieContract.MovieFavorites.CONTENT_URI, null,
@@ -310,7 +310,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     }
 
     //checks the device to see if there is a network connection
-    public boolean getInternetStatus() {
+    private boolean getInternetStatus() {
         // opens a dialog to the phone about its connection to the network
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
