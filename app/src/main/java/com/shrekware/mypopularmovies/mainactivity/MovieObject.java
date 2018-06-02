@@ -98,7 +98,7 @@ public class MovieObject implements Parcelable{
         this.releaseDate = releaseDate;
     }
 
-    protected MovieObject(Parcel in) {
+    private MovieObject(Parcel in) {
         if (in.readByte() == 0) {
             voteCount = null;
         } else {

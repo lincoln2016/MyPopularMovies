@@ -8,7 +8,7 @@
       <uses-permission android:name="com.shrekware.mypopularmovies.favoritesdb.TERMS_WRITE"/>
 
     <application
-        android:name="com.shrekware.mypopularmovies.MyMovieContext"
+        android:name="com.shrekware.mypopularmovies.mainactivity.MyMovieContext"
         android:launchMode="singleTop"
         android:fullBackupContent="false"
         android:allowBackup="false"

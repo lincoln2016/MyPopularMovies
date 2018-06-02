@@ -34,82 +34,82 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
-import com.shrekware.mypopularmovies.MyMovieContext;
-
+import com.shrekware.mypopularmovies.mainactivity.MyMovieContext;
+/*
+*  this class is to provide the content provider
+*  with instructions
+*/
 public class MovieProvider extends ContentProvider
 {
-
-   private  Context context;
+    // creates an instance of the movie database helper
     private MovieDataBaseHelper mDataBaseHelper;
-
-
-
-
+    // on created method
     @Override
-    public boolean onCreate() {
-       context = getContext();
+    public boolean onCreate()
+    {
+        // create a reference to the app context
+        Context context = getContext();
+        // initialize a new Movie Database helper
         mDataBaseHelper = new MovieDataBaseHelper(context);
-
+        // return done
         return true;
     }
-
+    // method to query the database
     @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-
-         Cursor cursor;
-       final SQLiteDatabase db = mDataBaseHelper.getReadableDatabase();
-
-        // try to get a write able database
-
-            //set the db to a write able instance of the movie databaseHelper
-
-            // get an instance data in the favorites database
-            cursor = db.query(MovieContract.MovieFavorites.cTABLE_NAME, projection,
-                    selection, selectionArgs, null ,null,sortOrder);
-
-            // if there is an error, show toast message saying database unavailable
-          //  Toast.makeText(this, R.string.database_unavailable_toast_movie_detail,Toast.LENGTH_LONG).show();
-
-//   new String[]{"_id","MOVIE_ID","TITLE","OVERVIEW","POSTERPATH","RELEASE_DATE","VOTE_AVERAGE"}
-
-
-             return cursor;
+    public Cursor query(@NonNull Uri uri, @Nullable String[] projection,
+                        @Nullable String selection, @Nullable String[] selectionArgs,
+                        @Nullable String sortOrder)
+    {
+        //get an instance of a readable Movie database helper
+        final SQLiteDatabase db = mDataBaseHelper.getReadableDatabase();
+        // return the query results
+        return db.query(MovieContract.MovieFavorites.cTABLE_NAME, projection,
+                selection, selectionArgs, null, null, sortOrder);
     }
-
+     // we are not using the type of data
     @Nullable
     @Override
-    public String getType(@NonNull Uri uri) {
+    public String getType(@NonNull Uri uri)
+    {
         return null;
     }
-
+    /*
+    *   adds a movie to the favorites database
+    */
     @Nullable
     @Override
-    public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-        // grabs an instance of ContentValues
-
-    if(mDataBaseHelper==null)mDataBaseHelper = new MovieDataBaseHelper(MyMovieContext.getMyContext());
-       final SQLiteDatabase sqlDB = mDataBaseHelper.getWritableDatabase();
-
-       sqlDB.insert(MovieContract.MovieFavorites.cTABLE_NAME,null,values);
-
-     return null;
+    public Uri insert(@NonNull Uri uri, @Nullable ContentValues values)
+    {
+        // checks to see if the Movie database helper exists
+        if (mDataBaseHelper == null)
+            // if there isn't a Movie database helper, we make a database helper
+            // requires a good context,  used a class to get an instance of the app context
+            mDataBaseHelper = new MovieDataBaseHelper(MyMovieContext.getMyContext());
+        // create a a final db from the helper
+        final SQLiteDatabase sqlDB = mDataBaseHelper.getWritableDatabase();
+        // insert the movie into the table
+        sqlDB.insert(MovieContract.MovieFavorites.cTABLE_NAME, null, values);
+        // returns nothing for a uri
+        return null;
     }
-
+/*
+*     the method to delete a favorites movie from the database
+*/
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-     int count;
-     final SQLiteDatabase db = mDataBaseHelper.getWritableDatabase();
-     count = db.delete(MovieContract.MovieFavorites.cTABLE_NAME, selection,selectionArgs);
-     return count;
+    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs)
+    {
+        // initialize a db to a writable object
+        final SQLiteDatabase db = mDataBaseHelper.getWritableDatabase();
+        // return the count of movies deleted
+        return db.delete(MovieContract.MovieFavorites.cTABLE_NAME, selection, selectionArgs);
     }
-
+    // not implementing update
     @Override
-    public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
+    public int update(@NonNull Uri uri, @Nullable ContentValues values,
+                      @Nullable String selection, @Nullable String[] selectionArgs)
+    {
         return 0;
     }
-
-
 }

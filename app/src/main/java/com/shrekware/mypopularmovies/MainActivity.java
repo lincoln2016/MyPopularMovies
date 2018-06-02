@@ -31,7 +31,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -48,7 +47,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.shrekware.mypopularmovies.database.MovieContract;
-import com.shrekware.mypopularmovies.database.MovieDataBaseHelper;
 import com.shrekware.mypopularmovies.mainactivity.FavoritesListAdapter;
 import com.shrekware.mypopularmovies.mainactivity.MovieListAdapter;
 import com.shrekware.mypopularmovies.mainactivity.MovieListObject;
@@ -63,7 +61,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 /*
  *  Main Class implements the onClickHandler for the MovieListAdapter
- *  and shows the results of the API call to theMovieDB.org
+ *  and the favorites list adapter
+ *  shows the results of the API call to theMovieDB.org
  */
 public class MainActivity extends AppCompatActivity implements MovieListAdapter.MovieListAdapterOnClickHandler, FavoritesListAdapter.FavoritesListAdapterOnClickHandler{
 
@@ -80,27 +79,15 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     // string for savedInstanceState data, defines either
     // popular or top rated as the state of the activity
     private String mySavedState;
-    // MovieListAdapter
+    // MovieListAdapter create
     public MovieListAdapter myAdapter;
-     //  creates a cursor
-    private Cursor cursor;
-    // creates an instance of the SQLite db
-    private SQLiteDatabase db = null;
-
-    private MovieDataBaseHelper movieDataBaseHelper;
-
-    private FavoritesListAdapter favAdapter;
     // loading indicator and the Bind call to mProgressBar
     // create a reference to the spinner used to indicate loading
-
-
     @BindView(R.id.progressBar)
     ProgressBar mProgressBar;
     // binding the movieListRecyclerView to recyclerView View
     @BindView(R.id.recyclerView_movieList)
     RecyclerView movieListRecyclerView;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -111,8 +98,6 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         setContentView(R.layout.activity_main);
         // the call to ButterKnife to bind to this activity
         ButterKnife.bind(this);
-
-      //  getSupportLoaderManager().initLoader(0, null, this);
         // grab a context reference for future use
         mContext = this;
         // get a reference to the system resources, used in MovieListService to access string values
@@ -121,8 +106,6 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         API_KEY = resources.getString(R.string.api_key);
         // sets the recycler view to a grid layout with 2 columns
         myAdapter = new MovieListAdapter(resultsList,getClickHandler());
-        //get adapter reference
-
         // set recycler view to a 2 column grid
         movieListRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         // attach the adapter to the layout
@@ -170,50 +153,33 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
             // set the title to the default value 'popular'
             Objects.requireNonNull(getSupportActionBar()).setTitle(titleBar);
             // asks for the movieDb for popular
-            // create an instance of the movieDataBaseHelper
-          // updateFavoritesList();
-            //getFavorites();
-
-            favAdapter =   new FavoritesListAdapter(cursor,getClickHandler(cursor));
-           getMovieJson(mySavedState);
+            getMovieJson(mySavedState);
         }
     }
     /*
      * this will get the favorites from the database and
      * display them in the movies recycler view
      */
- public void getFavorites(){
-
-        movieDataBaseHelper = new MovieDataBaseHelper(this);
-
-        //if the database doesn't exist make one
-       // if(db==null) movieDataBaseHelper.onCreate(db);
-
-     Cursor myCursor = getContentResolver().query(MovieContract.MovieFavorites.CONTENT_URI, null,
+    public void getFavorites()
+    {
+       // query the database for all favorites
+       Cursor myCursor = getContentResolver().query(MovieContract.MovieFavorites.CONTENT_URI, null,
              null, null,null);
-
-     favAdapter = new FavoritesListAdapter(myCursor,getClickHandler(myCursor));
-     // set the movie recycler view to a linear layout for the favorites list
-     movieListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-     // sets the movie recycler view data to the favorites list adapter with the cursor
-     movieListRecyclerView.setAdapter(favAdapter);
-
-
+        // initialize the favorites adapter to the new database cursor
+        FavoritesListAdapter favAdapter = new FavoritesListAdapter(myCursor, getClickHandler(myCursor));
+        // set the movie recycler view to a linear layout for the favorites list
+        movieListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        // sets the movie recycler view data to the favorites list adapter with the cursor
+         movieListRecyclerView.setAdapter(favAdapter);
     }
-
-
     private FavoritesListAdapter.FavoritesListAdapterOnClickHandler getClickHandler(Cursor cursor)
     {
-        //returns this for the OnClickHandler
-
-        return this;
+     //returns this for the OnClickHandler
+         return this;
     }
-
-
     // needed to reference this on clickHandler
     private MovieListAdapter.MovieListAdapterOnClickHandler getClickHandler()
     {
-
         //returns this for the OnClickHandler
         return this;
     }
@@ -243,12 +209,15 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                 // if Most Popular is selected in the options menu
                 case "popular":
                     // the retrofit call to retrieve the Popular movies
-                    client.getApiService().getPopularMovies(API_KEY).enqueue(new Callback<MovieListObject>() {
+                    client.getApiService().getPopularMovies(API_KEY).enqueue(new Callback<MovieListObject>()
+                    {
                         // the response of the popular movies call
                         @Override
-                        public void onResponse(@NonNull Call<MovieListObject> call, @NonNull Response<MovieListObject> response) {
+                        public void onResponse(@NonNull Call<MovieListObject> call, @NonNull Response<MovieListObject> response)
+                        {
                             // checks if the response is null
-                            if (response.body() != null) {
+                            if (response.body() != null)
+                            {
                                 // closes the loading indicator and shows the recyclerView
                                 showMovies();
                                 // loads the response into the resultsList
@@ -259,11 +228,10 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                                 movieListRecyclerView.setAdapter(new MovieListAdapter(resultsList, getClickHandler()));
                             }
                         }
-
                         // if the call to theMovieDb should fail
                         @Override
-                        public void onFailure(@NonNull Call<MovieListObject> call, @NonNull Throwable t) {
-
+                        public void onFailure(@NonNull Call<MovieListObject> call, @NonNull Throwable t)
+                        {
                             // logs the error message of a failure
                             Log.d(LOG_TAG, getString(R.string.log_error_message_popular_movie_call) + t.toString());
                         }
@@ -272,10 +240,12 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                 // if Top Rated is selected in the options menu
                 case "top_rated":
                     // the retrofit call to retrieve the Top Rated movies
-                    client.getApiService().getTopRatedMovies(API_KEY).enqueue(new Callback<MovieListObject>() {
+                    client.getApiService().getTopRatedMovies(API_KEY).enqueue(new Callback<MovieListObject>()
+                    {
                         // response from the top rated movies call
                         @Override
-                        public void onResponse(@NonNull Call<MovieListObject> call, @NonNull Response<MovieListObject> response) {
+                        public void onResponse(@NonNull Call<MovieListObject> call, @NonNull Response<MovieListObject> response)
+                        {
                             // checks is there was a response
                             if (response.body() != null) {
                                 // closes the loading indicator and shows the recyclerView
@@ -288,10 +258,10 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                                 movieListRecyclerView.setAdapter(new MovieListAdapter(resultsList, getClickHandler()));
                             }
                         }
-
                         // if the call to theMovieDb should fail
                         @Override
-                        public void onFailure(@NonNull Call<MovieListObject> call, @NonNull Throwable t) {
+                        public void onFailure(@NonNull Call<MovieListObject> call, @NonNull Throwable t)
+                        {
                             // logs the error message of a failure
                             Log.d(LOG_TAG, getString(R.string.log_error_message_top_rated_call) + t.toString());
                         }
@@ -302,14 +272,14 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         }
         else
         {   // if no internet connection
+            //set recyclerView to the empty list
+            movieListRecyclerView.setAdapter(new MovieListAdapter(resultsList, getClickHandler()));
             //  we close the loading indicator and shows the recyclerView
             showMovies();
             // shows toast stating No Internet Connection
-            Toast.makeText(this, R.string.toast_message_no_internet_access, Toast.LENGTH_LONG)
-                    .show();
+            Toast.makeText(this, R.string.toast_no_internet_access,Toast.LENGTH_LONG).show();
         }
     }
-
     // shows loading indicator
     private void showLoading() {
         // show the loading indicator
@@ -368,13 +338,15 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     }
     // directs the menu item clicks
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // get the id of the menu item selected
         int id = item.getItemId();
         // parse the menu item for which item was clicked,
-        switch(id){
-        // if the menu id was popular movies
-        case R.id.popular_movies:
+        switch(id)
+        {
+             // if the menu id was popular movies
+           case R.id.popular_movies:
             // set title of the actionBar to popular movies
             getSupportActionBar().setTitle(R.string.title_popular_movies);
             // makes the call that retrieves the resultsList of popular movie objects
@@ -383,8 +355,8 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
             mySavedState= getString(R.string.themoviedb_sort_by_popular);
             // returns done
             break;
-        // if the menu id was top rated
-        case R.id.top_rated:
+             // if the menu id was top rated
+          case R.id.top_rated:
             // set title of the actionBar to top movies
             getSupportActionBar().setTitle(R.string.title_top_rated_movies);
             // makes the call that retrieves the resultsList of top rated movie objects
@@ -393,19 +365,18 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
             mySavedState = getString(R.string.themoviedb_sort_by_top_rated);
             // returns done
            break;
-        // if the menu id was favorites
-        case R.id.favorites:
+             // if the menu id was favorites
+          case R.id.favorites:
             //set title of the actionBar to top movies
             getSupportActionBar().setTitle(R.string.title_favorites_movies);
             //makes the call that retrieves the favorites movie list
-            //getFavorites();
-             getFavorites();
-                // saves the state of the app in the mySavedState value, favorites list
+            getFavorites();
+            // saves the state of the app in the mySavedState value, favorites list
             mySavedState = getString(R.string.themoviedb_sort_by_favorites);
             // returns done
             break;
-        // if the menu id was about
-        case R.id.about:
+              // if the menu id was about
+          case R.id.about:
             // creates an instance of the AboutDialogFragment
             AboutDialogFragment about = new AboutDialogFragment();
             // creates an instance of fragmentManager
@@ -414,11 +385,11 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
             about.show(manager, "about");
             //returns done
             break;
-       }
+        }
        // the default behaviour
         return super.onOptionsItemSelected(item);
     }
-    // when a movie is clicked, opens detail activity
+    // when a movie is clicked, opens Movie Detail Activity
     @Override
     public void onClick(MovieObject movie)
     {
@@ -441,31 +412,34 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         // call superclass to save any view hierarchy
         super.onSaveInstanceState(outState);
     }
+    // when a favorite movie More Details is clicked,  it opens Movie Detail Activity
     @Override
     public void onClick(Cursor cursor)
     {
-        int movieID = Integer.parseInt(cursor.getString(1));
-        Log.v(LOG_TAG,"movie id "+ movieID);
-        MovieObject myMovie = new MovieObject(cursor.getInt(6),cursor.getInt(1),true,cursor.getDouble(6),cursor.getString(2),0.0,
-                cursor.getString(4),"en-us","",null,cursor.getString(4),false,cursor.getString(3),cursor.getString(5));
-             Log.v(LOG_TAG,"movie is :"+myMovie.getTitle());
+        // creates a movie object from the cursor details to send to the Movie Detail Activity
+        MovieObject myMovie = new MovieObject(
+                cursor.getInt(6),
+                cursor.getInt(1),
+                true,
+                cursor.getDouble(6),
+                cursor.getString(2),
+                0.0,
+                cursor.getString(4),
+                "en-us",
+                "",
+                null,
+                cursor.getString(4),
+                false,
+                cursor.getString(3),
+                cursor.getString(5));
 
         // creates an intent that will open a Movie Detail Activity
         Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
-        // adds the movie object as a parcelable movie object
+        // adds the movie object to the intent as a parcelable movie object
         intent.putExtra("movie", myMovie);
         //opens movieDetailActivity and sends the extra data
-       startActivity(intent);
-
+        startActivity(intent);
     }
-    public void deleteMovie(int movieID){
-
-
-
-
-    }
-
-
 }
 
 

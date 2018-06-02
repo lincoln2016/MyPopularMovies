@@ -40,20 +40,21 @@ import java.util.List;
  * that the MovieDetail Reviews recyclerView
  * uses to inflate each position
  */
-public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapter.ViewHolder>{
-
+public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapter.ViewHolder>
+{
+    // create an instance of a list of movie review objects
     final private List<MovieReviewObject> myListOfReviews;
-
-    public MovieReviewsAdapter(List<MovieReviewObject> listOfReviews) {
+    //constructor for the Movie Reviews Adapter
+    public MovieReviewsAdapter(List<MovieReviewObject> listOfReviews)
+    {
         // get a local list of reviews
         myListOfReviews=listOfReviews;
-
-
     }
     @NonNull
     @Override
-    public MovieReviewsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //
+    public MovieReviewsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    {
+        // gets a reference to the context
         Context context = parent.getContext();
         // Get the RecyclerView item layout
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -64,15 +65,19 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
     }
    //find layout item and set value
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position)
+    {
+        // creates a textView for review author and binds it to layout
         TextView author = holder.itemView.findViewById(R.id.tv_review_author);
+        // creates a textView for review and binds it to the layout
         TextView review = holder.itemView.findViewById(R.id.tv_review_content);
+        // creates a string for the authors name
         String authorName = "Written by: " + myListOfReviews.get(position).getAuthor();
+        // sets the authors text view to the auth name string
         author.setText(authorName);
+        // sets the review text to the review
         review.setText(myListOfReviews.get(position).getContent());
     }
-
-
     @Override
     public int getItemCount() {
         //if there are items in the list, we count them
@@ -83,11 +88,11 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
         // if there is no list we return a size of 0
         return 0;
     }
-    class ViewHolder extends RecyclerView.ViewHolder {
-        ViewHolder(View itemView) {
+    class ViewHolder extends RecyclerView.ViewHolder
+    {
+        ViewHolder(View itemView)
+        {
             super(itemView);
-
         }
     }
-
 }

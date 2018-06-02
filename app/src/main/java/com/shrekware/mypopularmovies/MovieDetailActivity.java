@@ -28,25 +28,21 @@ package com.shrekware.mypopularmovies;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -79,8 +75,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MovieDetailActivity extends AppCompatActivity implements
-        MovieTrailersAdapter.MovieTrailersAdapterOnClickHandler{
-    private Cursor cursor;
+        MovieTrailersAdapter.MovieTrailersAdapterOnClickHandler
+{
     // tag for log messages
     private final static String LOG_TAG = MovieDetailActivity.class.getSimpleName();
     // the api key from theMovieDB, it can be found in the values/strings.xml file
@@ -95,10 +91,8 @@ public class MovieDetailActivity extends AppCompatActivity implements
     private List<MovieReviewObject> reviewsList;
     // movie reviews list
     private MovieReviewListObject reviewListObject;
-    // SQ lite data base
-    SQLiteDatabase db = null;
     // gets a reference to the activity that can be passed to the innerclass
-    final Context thisActivity = this;
+    private final Context thisActivity = this;
     // binds the imageView to the movie_detail image
     @BindView(R.id.image_movie_detail)
     ImageView image;
@@ -136,12 +130,13 @@ public class MovieDetailActivity extends AppCompatActivity implements
     // share button, shares the first trailer
     @BindView(R.id.btn_share)
     ImageButton btnShare;
+    // remove from favorites button
     @BindView(R.id.btn_not_favorite)
     ImageButton btn_notFavorite;
     /*
     *  called when activity is created
     */
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -151,28 +146,6 @@ public class MovieDetailActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_movie_detail);
         // calls ButterKnife to bind the views
         ButterKnife.bind(this);
-
-        // gets a reference to the SQLite helper
-      //  final MovieDataBaseHelper movieDataBaseHelper = new MovieDataBaseHelper(this);
-
-        //  make a database
-     //   movieDataBaseHelper.onCreate(db);
-        // tries to get a reference to the database with write call, other option is a readableDatabase
-  /*      try
-        {
-            // gets access to write to the database
-            db = movieDataBaseHelper.getWritableDatabase();
-        }catch (SQLiteException e)
-        {
-            // if it cant get access, show a toast
-            Toast.makeText(this, R.string.database_unavailable_toast_movie_detail,Toast.LENGTH_LONG).show();
-        }*/
-          ContentResolver resolver = getContentResolver();
-      cursor = resolver.query(MovieContract.MovieFavorites.CONTENT_URI,null,
-
-                  null,null);
-
-
         // gets a reference to app context
         mContext = this;
         // retrieve api key
@@ -233,38 +206,32 @@ public class MovieDetailActivity extends AppCompatActivity implements
         //  set on click listener, on the add to favorites button
         btn_notFavorite.setOnClickListener(new View.OnClickListener()
         {
-
             @Override
             public void onClick(View v)
             {
-
+                // initializes a content values object to store the values for the table columns
                 ContentValues myContent = new ContentValues();
-                // add the movie id
+                // add the movie id to the content values
                 myContent.put(MovieContract.MovieFavorites.cMOVIE_ID, movie.getId());
-                // adds the title
-                Log.v("MovieDetailActivity","OnClick add "+movie.getTitle());
+                // adds the title to the content values
                 myContent.put(MovieContract.MovieFavorites.cTITLE, movie.getTitle());
+                // adds the movie overview/description to the content values
                 myContent.put(MovieContract.MovieFavorites.cOVERVIEW, movie.getOverview());
-                 myContent.put(MovieContract.MovieFavorites.cPOSTER,movie.getPosterPath());
+                // adds the movie poster path to the content values
+                myContent.put(MovieContract.MovieFavorites.cPOSTER,movie.getPosterPath());
+                // adds the movie release date to the content values
                 myContent.put(MovieContract.MovieFavorites.cRELEASE_DATE,movie.getReleaseDate());
+                // adds the movie vote average to the content values
                 myContent.put(MovieContract.MovieFavorites.cVOTE_AVERAGE, movie.getVoteAverage());
+                // retrieves a local reference to the favorites db Uri
                 Uri uri = MovieContract.MovieFavorites.CONTENT_URI;
-                Uri newU = getContentResolver().insert(uri,myContent);
-
-
-                // when clicked, favorite button made visible
-                btnFavorite.setVisibility(View.VISIBLE);
-                // the add favorite button hidden
-                btn_notFavorite.setVisibility(View.GONE);
+                // insert a new movie into the favorites db, could retrieve the uri of the insert
+                getContentResolver().insert(uri,myContent);
+                // shows favorite star after clicking add sign
+                showFavoriteButton();
                 // shows toast, movie added to favorites
-                 Toast.makeText(mContext, R.string.add_movie_to_favorites_toast_movie_detail, Toast.LENGTH_SHORT).show();
-                // checks if db is not empty
-
-               // {
-                    // adds movie to database
-                 //   MovieDataBaseHelper.insertMovie(finalDb,movie.getId(),movie.getTitle(),movie.getOverview(),movie.getPosterPath(),movie.getReleaseDate(),movie.getVoteAverage());
-              //  }
-        }
+                Toast.makeText(mContext, R.string.add_movie_to_favorites_toast_movie_detail, Toast.LENGTH_SHORT).show();
+            }
         });
        /*
        *   sets an onClickListener for the share button
@@ -273,26 +240,28 @@ public class MovieDetailActivity extends AppCompatActivity implements
         {
             @Override
             //when the button is clicked
-            public void onClick(View v) {
-                if (getInternetStatus()) {
-                // gets the first trailer key and sends it with the request
-                String trailerKey = trailersList.get(0).getKey();
-
-              //  getPermission();
-                // checks if there is a trailer before sharing
-                if (trailerKey!=null){ getShareIntent(trailerKey);}
-            }
-        else
+            public void onClick(View v)
             {
-
-                Toast.makeText(thisActivity,"it seems we currently don't have internet access, please try again later",Toast.LENGTH_LONG).show();
+                if (getInternetStatus())
+                {
+                    // gets the first trailer key and sends it with the request
+                    String trailerKey = trailersList.get(0).getKey();
+                    // checks if there is a trailer before sharing
+                    if (trailerKey!=null)
+                    {
+                        getShareIntent(trailerKey);
+                    }
+                }
+                else
+                {
+                    Toast.makeText(thisActivity, R.string.toast_no_internet_access,Toast.LENGTH_LONG).show();
+                }
             }
-
-        }});
+        });
         /*
-         *   sets an onClickListener for the favorite button
-         *   if clicked it removes your movie from favorites
-         */
+        *   sets an onClickListener for the favorite button
+        *   if clicked it removes your movie from favorites
+        */
         btnFavorite.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -306,13 +275,21 @@ public class MovieDetailActivity extends AppCompatActivity implements
                 Toast.makeText(mContext, R.string.removed_from_favorites_toast, Toast.LENGTH_SHORT).show();
                 // gets the value of the movie id
                 int movieId = movie.getId();
-                // deletes the movie id from the database
+                // initializes a uri to the favorites db
                 Uri uri = MovieContract.MovieFavorites.CONTENT_URI;
-               int deletedCount = getContentResolver().delete(uri,"MOVIE_ID = ?", new String[]{String.valueOf(movieId)});
+                // deletes the movie id from the database with the content resolver
+                getContentResolver().delete(uri,"MOVIE_ID = ?", new String[]{String.valueOf(movieId)});
 
             }
         });
 
+    }
+    // shows favorite star after clicking add button
+    public void showFavoriteButton() {
+        // when clicked, favorite button made visible
+        btnFavorite.setVisibility(View.VISIBLE);
+        // the add favorite button hidden
+        btn_notFavorite.setVisibility(View.GONE);
     }
     /*
     * used to share a movie trailer with email,
@@ -324,22 +301,18 @@ public class MovieDetailActivity extends AppCompatActivity implements
             if (ContextCompat.checkSelfPermission(thisActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED & !isExternalStorageWritable())
             {
-                // if not able to write to storage, request permission to save the picture
-            //getPermission();
+                // if you able to write to external storage,  share the trailer and picture
                 Share(trailerKey);
             }
             else
             {
-              // request permission to save the picture
-            getPermission();
+                // request permission to save the picture, if not already granted
+                getPermission();
             }
-            // starts the intent to share the movie trailer
-            // startActivity(intent);
-
     }
     //  checks if the permission to save the picture is given
     private void getPermission()
-    {
+    {       // requests the permission to write to external storage
             ActivityCompat.requestPermissions((Activity) thisActivity,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},2);
     }
@@ -348,55 +321,64 @@ public class MovieDetailActivity extends AppCompatActivity implements
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
          super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+         // checks if request code is for our request to write to external storage
          if(requestCode==2)
          {
+             // if the first permission request is granted
              if(grantResults[0]== PackageManager.PERMISSION_GRANTED)
              {
+                 // share the trailer
                  Share(trailersList.get(0).getKey());
              }
              else
              {
+                 // if not granted show a toast message saying no permission
                  Toast.makeText(thisActivity, getString(R.string.we_dont_have_permission),Toast.LENGTH_LONG).show();
              }
          }
          else
          {
+             // if request code doesn't match our request, do the default behavior
              super.onRequestPermissionsResult(requestCode,permissions,grantResults);
          }
     }
-    private void Share(String trailerKey){
-
-             // string for the saved image description
-             String myTitle = movie.getTitle();
-             // get the image from the MovieDetailActivity ImageView
-             Drawable mDrawable = image.getDrawable();
-             // convert the drawable to Bitmap, needed to save the file
-             Bitmap mBitmap = ((BitmapDrawable) mDrawable).getBitmap();
-             // create a string for the path to the saved file,
-             // will be used to share the picture
-             String path = MediaStore.Images.Media.insertImage(getContentResolver(),
-                     mBitmap, myTitle, null);
-             // convert the path string to a uri in order to retrieve the image
-             Uri uri = Uri.parse(path);
-             // the string for the first movie trailer, shared as a clickable link
-             String link = getString(R.string.you_tube_link) + trailerKey;
-             // create the intent to share something
-             Intent intent = new Intent(Intent.ACTION_SEND);
-             // set the data shared type to any any, is that a performance issue or a security risk?
-             intent.setType("*/*");
-             // adds a subject, if used in the share medium
-             intent.putExtra(Intent.EXTRA_SUBJECT, myTitle + getString(R.string.trailer_was_shared_movie_detail));
-             // adds the clickable link to the shared message
-             intent.putExtra(Intent.EXTRA_TEXT, link);
-             // adds the picture of the movie poster to the message
-             intent.putExtra(Intent.EXTRA_STREAM, uri);
-             intent = Intent.createChooser(intent, "share");
-
-             // Verify the intent will resolve to at least one activity
-             if (intent.resolveActivity(getPackageManager()) != null) {
-                 startActivity(intent);
-             }
-
+    /*
+    *  the method to share the move and a trailer with a friend
+    */
+    private void Share(String trailerKey)
+    {
+        // string for the saved image description
+        String myTitle = movie.getTitle();
+        // get the image from the MovieDetailActivity ImageView
+        Drawable mDrawable = image.getDrawable();
+        // convert the drawable to Bitmap, needed to save the file
+        Bitmap mBitmap = ((BitmapDrawable) mDrawable).getBitmap();
+        // create a string for the path to the saved file,
+        //will be used to share the picture
+        String path = MediaStore.Images.Media.insertImage(getContentResolver(),
+                          mBitmap, myTitle, null);
+        // convert the path string to a uri in order to retrieve the image
+        Uri uri = Uri.parse(path);
+        // the string for the first movie trailer, shared as a clickable link
+        String link = getString(R.string.you_tube_link) + trailerKey;
+        // create the intent to share something
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        // set the data shared type to any any, is that a performance issue or a security risk?
+        intent.setType("*/*");
+        // adds a subject, if used in the share medium
+        intent.putExtra(Intent.EXTRA_SUBJECT, myTitle + getString(R.string.trailer_was_shared_movie_detail));
+        // adds the clickable link to the shared message
+        intent.putExtra(Intent.EXTRA_TEXT, link);
+        // adds the picture of the movie poster to the message
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        // adds a chooser to the intent
+        intent = Intent.createChooser(intent, "share");
+        // Verify the intent will resolve to at least one activity
+        if (intent.resolveActivity(getPackageManager()) != null)
+        {
+            // starts the intent to share
+            startActivity(intent);
+        }
     }
     /*
     * the method that fetches the movie trailers using retrofit
@@ -404,7 +386,8 @@ public class MovieDetailActivity extends AppCompatActivity implements
     private void getMovieTrailers()
     {
         //checks if the list of movie trailer objects exists
-        if (trailersList != null) {
+        if (trailersList != null)
+        {
             //if there is a list, we clear the movie trailer objects from it
             trailersList.clear();
         }
@@ -425,7 +408,7 @@ public class MovieDetailActivity extends AppCompatActivity implements
                         // loads the response into the resultsList
                         trailersList = response.body().getResults();
                         //adds the resultList to the RecyclerView and adds an onClickHandler
-                        //  movieReviewsRecyclerView
+                        //  to the movieReviewsRecyclerView
                         movieTrailersRecyclerView.setAdapter(new MovieTrailersAdapter(trailersList, getTrailersClickHandler()));
                     }
                 }
@@ -621,31 +604,38 @@ public class MovieDetailActivity extends AppCompatActivity implements
         // creates a true/false variable to return the query results
         boolean isFav = true;
         // grabs the row of movie favorites that match the movie id
-      // MovieProvider provider = new MovieProvider();
-      // provider.query(null, new String[]{"_id", "MOVIE_ID", "TITLE", "OVERVIEW", "POSTERPATH", "RELEASE_DATE", "VOTE_AVERAGE"},null,null);
+        Cursor myCursor = getContentResolver().query(MovieContract.MovieFavorites.CONTENT_URI,
+                null,
+                "MOVIE_ID = ?",
+                new String[]{String.valueOf(movieID)},
+                null);
 
-      Cursor myCursor = getContentResolver().query(MovieContract.MovieFavorites.CONTENT_URI, null,
-            "MOVIE_ID = ?", new String[]{String.valueOf(movieID)},null);
-        // test whether the cursor returned a result or not
-       // isFav = cursor.getCount() != 0;
-      //getContentResolver().query(MovieContract.MovieFavorites.CONTENT_URI, new String[]{"_id", "MOVIE_ID", "TITLE", "OVERVIEW", "POSTERPATH", "RELEASE_DATE", "VOTE_AVERAGE"},null, null);
-
-           if(myCursor.getCount()>0)return true;
-
-       myCursor.close();
+         // test whether the cursor returned a result or not
+        if(myCursor.getCount()>0)
+        {
+             //close the cursor
+             myCursor.close();
+             // return true if the query finds a match
+             return true;
+        }
+        //close the cursor
+        myCursor.close();
+        // if no match found return false
         return !isFav;
     }
     /*
      *  used to check if the phone has internet access
      */
-    public boolean getInternetStatus() {
+    public boolean getInternetStatus()
+    {
         // opens a dialog to the phone about its connection to the network
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         // gets an instance of the NetworkInfo.class
         NetworkInfo networkInfo = null;
         // checks to see if the connectivity manager is available
-        if (connectivityManager != null) {
+        if (connectivityManager != null)
+        {
             //asks the phone if it has a network connection
             networkInfo = connectivityManager.getActiveNetworkInfo();
         }
@@ -656,15 +646,11 @@ public class MovieDetailActivity extends AppCompatActivity implements
     /* Checks if external storage is available for read and write
     *  used in share movie intent
     */
-    public boolean isExternalStorageWritable() {
+    public boolean isExternalStorageWritable()
+    {
+        // initializes a string to the state of the external storage drive, present or not
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
+        // returns whether there is media mounted or not
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
-    private final static String[] COLUMNS ={MovieContract.MovieFavorites.cID,MovieContract.MovieFavorites.cMOVIE_ID,
-            MovieContract.MovieFavorites.cTITLE,MovieContract.MovieFavorites.cOVERVIEW, MovieContract.MovieFavorites.cPOSTER,MovieContract.MovieFavorites.cRELEASE_DATE,MovieContract.MovieFavorites.cVOTE_AVERAGE};
-
-
 }

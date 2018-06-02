@@ -48,7 +48,6 @@
     <!--  error and toast messages                   -->
     <string name="log_error_message_popular_movie_call">Error on Failure of the Popular Movie Call:</string>
     <string name="log_error_message_top_rated_call">Error on Failure of the Top Rated Movie Call:</string>
-    <string name="toast_message_no_internet_access">No Internet Connection, Please try again.</string>
     <string name="mainActivity_missing_api_key">Missing API KEY</string>
     <!--  about alertDialog fragment                -->
     <string name="about">About</string>
@@ -77,5 +76,9 @@
     <string name="trailer_was_shared_movie_detail">trailer was shared with you</string>
     <string name="you_tube_link">https://www.youtube.com/watch?v=</string>
     <string name="removed_from_favorites_toast">removed movie from favorites</string>
+    <string name="toast_no_internet_access">it seems we currently don\'t have internet access.   You can still view your favorites while offline.</string>
+    <string name="more_button_favorites_list">More</string>
+    <string name="share_button_content_description">share button</string>
+    <string name="add_to_favorites_button_content_description">add to favorites button</string>
 
 </resources>

@@ -26,79 +26,48 @@
 
 package com.shrekware.mypopularmovies.database;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
-public class MovieDataBaseHelper extends SQLiteOpenHelper{
+/*
+*    Class used by MovieProvider to access the favorites database
+*/
+class MovieDataBaseHelper extends SQLiteOpenHelper
+{
     //// name of database
-    public static final String DB_NAME = MovieContract.MovieFavorites.cDATABASE_NAME;
-    public static final int DB_VERSION = 1;
-
-    private static final String CREATE_FAVORITE = "CREATE TABLE " + MovieContract.MovieFavorites.cTABLE_NAME +"(" +
-           MovieContract.MovieFavorites.cID +" INTEGER PRIMARY KEY AUTOINCREMENT, " +
-           MovieContract.MovieFavorites.cMOVIE_ID +" INTEGER, " +
-            MovieContract.MovieFavorites.cTITLE+" TEXT, " +
-            MovieContract.MovieFavorites.cOVERVIEW +" TEXT," +
-            MovieContract.MovieFavorites.cPOSTER+" TEXT," +
-            MovieContract.MovieFavorites.cRELEASE_DATE+" TEXT," +
-            MovieContract.MovieFavorites.cVOTE_AVERAGE+" REAL );";
-    public MovieDataBaseHelper(Context context) {
+    private static final String DB_NAME = MovieContract.MovieFavorites.cDATABASE_NAME;
+    //  database version
+    private static final int DB_VERSION = 1;
+    // create database table string - column names
+    private static final String CREATE_FAVORITE = "CREATE TABLE " +
+            MovieContract.MovieFavorites.cTABLE_NAME + "(" +
+            MovieContract.MovieFavorites.cID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            MovieContract.MovieFavorites.cMOVIE_ID + " INTEGER, " +
+            MovieContract.MovieFavorites.cTITLE + " TEXT, " +
+            MovieContract.MovieFavorites.cOVERVIEW + " TEXT," +
+            MovieContract.MovieFavorites.cPOSTER + " TEXT," +
+            MovieContract.MovieFavorites.cRELEASE_DATE + " TEXT," +
+            MovieContract.MovieFavorites.cVOTE_AVERAGE + " REAL );";
+    /*
+    * Movie Database constructor
+    */
+     MovieDataBaseHelper(Context context)
+    {
+        //default constructor
         super(context, DB_NAME, null, DB_VERSION);
-
-
-
     }
-  // adds a favorite movie and all the info to the database
-    public static void insertMovie(SQLiteDatabase db, int movieId, String title, String overView,
-                                    String posterPath, String releaseDate, Double voteAverage ){
-        // grabs an instance of ContentValues
-        ContentValues myContent = new ContentValues();
-        // add the movie id
-        myContent.put(MovieContract.MovieFavorites.cMOVIE_ID, movieId);
-        // adds the title
-        myContent.put(MovieContract.MovieFavorites.cTITLE, title);
-        myContent.put(MovieContract.MovieFavorites.cOVERVIEW, overView);
-        myContent.put(MovieContract.MovieFavorites.cPOSTER,posterPath);
-        myContent.put(MovieContract.MovieFavorites.cRELEASE_DATE,releaseDate);
-        myContent.put(MovieContract.MovieFavorites.cVOTE_AVERAGE, voteAverage);
-        //inserts myContents into the next id
-        db.insert(MovieContract.MovieFavorites.cTABLE_NAME,null,myContent);
-    }
-
-
     //this should include everything your database needs to create a table
     @Override
     public void onCreate(SQLiteDatabase db) {
-        //CREATE THE COLUMNS IN THE TABLE
-/*        final String SQL_CREATE_FAVORITES = "CREATE TABLE " + MovieContract.MovieFavorites.cTABLE_NAME +"("
-        +"_id INTEGER PRIMARY KEY AUTOINCREMENT,"
-        +"MOVIE_ID INTEGER, "
-        +"TITLE TEXT,"
-        +"OVERVIEW TEXT,"
-        +"POSTERPATH TEXT,"
-        +"RELEASE_DATE TEXT,"
-        +"VOTE_AVERAGE REAL );";*/
-        Log.v("MovieDatabaseHelper", "sql string: "+CREATE_FAVORITE);
-           db.execSQL(CREATE_FAVORITE);
+        //CREATE THE DATABASE
+        db.execSQL(CREATE_FAVORITE);
     }
     // used to modify the structure of the table after release
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-
-
-
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+    {
+        // if we needed to upgrade the database
     }
 
-
-    public void deleteRow(SQLiteDatabase db,int movieId){
-
-
-        db.delete(MovieContract.MovieFavorites.cTABLE_NAME,"MOVIE_ID=?",new String[]{String.valueOf(movieId)});
-
-
-    }
 }

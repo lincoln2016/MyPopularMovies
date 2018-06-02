@@ -24,21 +24,30 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.shrekware.mypopularmovies;
+package com.shrekware.mypopularmovies.mainactivity;
 
 import android.app.Application;
 import android.content.Context;
-
+/*
+*   this class is for context reference through out the app
+*   if you cant pass Context with the method call, you can try to get it through this class
+*/
 public class MyMovieContext extends Application
 {
+    // initializes an object to store the context in
     private static Object myContext;
-
-    public void onCreate() {
+    // on create, gets the context
+    public void onCreate()
+    {
+        // default on create
         super.onCreate();
+        // initialize myContext to the apps context
         myContext = getApplicationContext();
     }
-
-    public static Context getMyContext() {
+    // a get context method, returns a reference to the app context
+    public static Context getMyContext()
+    {
+        // returns the myContext object
         return (Context)myContext;
     }
 }

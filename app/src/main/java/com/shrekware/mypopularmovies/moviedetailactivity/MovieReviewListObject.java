@@ -37,7 +37,8 @@ import com.google.gson.annotations.SerializedName;
  * Review RecyclerView to display the reviews
  */
 
-public class MovieReviewListObject {
+public class MovieReviewListObject
+{
 
         @SerializedName("id")
         @Expose
@@ -95,4 +96,4 @@ public class MovieReviewListObject {
             this.totalResults = totalResults;
         }
 
-    }
+}

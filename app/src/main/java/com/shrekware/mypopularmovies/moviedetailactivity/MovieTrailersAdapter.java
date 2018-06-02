@@ -43,11 +43,12 @@ import java.util.List;
  * that the MovieDetail trailers recyclerView
  * uses to inflate each position
 */
-public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdapter.ViewHolder> {
+public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdapter.ViewHolder>
+{
     // create a List for the movieDetail objects
     final private List<MovieTrailerObject> myListOfTrailers;
     // create an ImageView called image
-     private ImageView image;
+    private ImageView image;
     // create a MovieListAdapter OnClickHandler
     final private MovieTrailersAdapter.MovieTrailersAdapterOnClickHandler myOnClickHandler;
     //textView for the trailer title
@@ -59,7 +60,9 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
     /*
      *Constructor for the movie trailers adapter
      */
-    public MovieTrailersAdapter(List<MovieTrailerObject> myList, MovieTrailersAdapter.MovieTrailersAdapterOnClickHandler clickHandler  ) {
+    public MovieTrailersAdapter(List<MovieTrailerObject> myList,
+                                MovieTrailersAdapter.MovieTrailersAdapterOnClickHandler clickHandler)
+    {
         //set the local list of Movies to the offered list
         myListOfTrailers = myList;
         // sets the local MovieListAdapter OnClickHandler to offered clickHandler
@@ -68,7 +71,8 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    {
         context = parent.getContext();
         // Get the RecyclerView item layout
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -77,9 +81,9 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
         // returns the view that will be used in the recyclerView
         return new MovieTrailersAdapter.ViewHolder(view);
     }
-
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position)
+    {
         image = holder.itemView.findViewById(R.id.imageView_movie_trailer);
         trailerName = holder.itemView.findViewById(R.id.tv_trailer_title);
         trailerType = holder.itemView.findViewById(R.id.tv_trailer_type);
@@ -90,9 +94,7 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
         trailerType.setText(myType);
         String youTube =context.getString(R.string.youtube_image_url_beginning)+myTrailer.getKey()+context.getString(R.string.trailer_image_size_end);
         Picasso.get().load(youTube).placeholder(R.mipmap.loading_please_wait).into(image);
-
     }
-
     @Override
     public int getItemCount() {
         //if there are items in the list, we count them
@@ -103,10 +105,10 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
         // if there is no list we return a size of 0
         return 0;
     }
-
-
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ViewHolder(View view) {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+    {
+        ViewHolder(View view)
+        {
             super(view);
             // find the image for the recyclerView trailer
             image = view.findViewById(R.id.imageView_movie_trailer);
@@ -119,19 +121,18 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
         }
 
         @Override
-        public void onClick(View v) {
+        public void onClick(View v)
+        {
            //TODO  play trailer
             //on the click of a recyclerView item, we retrieve the
             //movie object in the view clicked
             MovieTrailerObject myTrailer = myListOfTrailers.get(getAdapterPosition());
             // pass the movie object to the instance of the MovieListAdapterOnClickHandler
             myOnClickHandler.onClick(myTrailer);
-
-
         }
     }
-
-    public interface MovieTrailersAdapterOnClickHandler {
+    public interface MovieTrailersAdapterOnClickHandler
+    {
         void onClick(MovieTrailerObject myMovieTrailer);
     }
 }

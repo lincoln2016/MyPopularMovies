@@ -34,8 +34,8 @@ import com.google.gson.annotations.SerializedName;
 * and parsed with gson, used in movie detail activity
 * Review RecyclerView to display the reviews
 */
-
-    public class MovieReviewObject {
+public class MovieReviewObject
+{
 
         @SerializedName("author")
         @Expose
@@ -82,6 +82,6 @@ import com.google.gson.annotations.SerializedName;
             this.url = url;
         }
 
-    }
+}
 
 

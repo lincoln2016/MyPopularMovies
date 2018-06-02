@@ -31,18 +31,19 @@ import com.shrekware.mypopularmovies.R;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RetrofitMovieDetailsClient {
+public class RetrofitMovieDetailsClient
+{
 
     // constant string for theMovieDB.org base API URL - https://api.themoviedb.org/
     private static final String BASE_URL = MainActivity.resources.getString(R.string.retrofit_client_base_url);
     // creates an instance of the MovieListService which sets up the call for retrofit
     // the MovieListService includes the API_KEY
     final private MovieDetailsService movieDetailsService;
-
     /*
      * the constructor for the Retrofit Client
      */
-    public RetrofitMovieDetailsClient() {
+    public RetrofitMovieDetailsClient()
+    {
         // creating the retrofit object we will use to call theMovieDB.org
         Retrofit retrofit = new Retrofit.Builder()
                 //adds base url to the retrofit client
@@ -55,18 +56,10 @@ public class RetrofitMovieDetailsClient {
         // adds the movie trailer service to the retrofit client
         movieDetailsService = retrofit.create(MovieDetailsService.class);
     }
-
-
     //  the method the retrofit client will call to retrieve the movie trailers or reviews list
-    public MovieDetailsService getMovieDetailService() {
+    public MovieDetailsService getMovieDetailService()
+    {
         //returns the trailers list
         return movieDetailsService;
     }
-
-
-
-
-
-
-
 }

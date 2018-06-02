@@ -30,7 +30,8 @@ package com.shrekware.mypopularmovies.moviedetailactivity;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class MovieTrailerListObject {
+public class MovieTrailerListObject
+{
         // some obscure id, theMovieDB generated
         @SerializedName("id")
         @Expose
@@ -55,6 +56,5 @@ public class MovieTrailerListObject {
         public void setResults(List<MovieTrailerObject> results) {
             this.results = results;
         }
-
-    }
+}
 
