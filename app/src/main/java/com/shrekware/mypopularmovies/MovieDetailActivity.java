@@ -46,6 +46,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -160,8 +161,10 @@ public class MovieDetailActivity extends AppCompatActivity implements
         String averageRating = getString(R.string.average_user_rating)+": "+movie.getVoteAverage().toString();
         // setting the userRating textView to the title and vote average
         userRatingText.setText(averageRating);
-        // sets the layout manager to a linear layout on this activity
-        movieTrailersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        // sets the layout manager to a Grid layout on that scrolls horizontally
+        movieTrailersRecyclerView.setLayoutManager(new GridLayoutManager(this, 1, LinearLayoutManager.HORIZONTAL, false));
+        //alternate layout vertical   // sets the layout manager to a linear layout on this activity
+       //   movieTrailersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         // instantiates a new instance of the Movie trailers adapter class
         MovieTrailersAdapter movieTrailersAdapter = new MovieTrailersAdapter(trailersList, null);
         // sets the adapter to the movie trailers recycler view
@@ -588,10 +591,23 @@ public class MovieDetailActivity extends AppCompatActivity implements
     @Override
     public void onClick(MovieTrailerObject movie)
     {
-       // creates a new intent that sends a URI for a youtube video
+        // creates a new intent that sends a URI for a youtube video
         Intent youTubeIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube://" + movie.getKey()));
-       // starts the intent to watch the trailer
-       startActivity(youTubeIntent);
+        // web intent for youtube's trailer
+        Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=" + movie.getKey()));
+        // Verify that the intent will resolve to an activity
+        if (youTubeIntent.resolveActivity(getPackageManager()) != null)
+        {
+            // starts the intent to watch the trailer with the you tube app
+            startActivity(youTubeIntent);
+        }
+        else
+        {
+            // starts the intent to watch the trailer with a browser
+            startActivity(webIntent);
+        }
+
+
     }
     /*
     *  queries the favorites database to check whether the movie

@@ -34,12 +34,15 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.LogPrinter;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -81,8 +84,13 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     private String mySavedState;
     // MovieListAdapter create
     private MovieListAdapter myAdapter;
-    // loading indicator and the Bind call to mProgressBar
+
+    private Bundle mySavedBundle;
     // create a reference to the spinner used to indicate loading
+    private GridLayoutManager myGridLayoutManager;
+
+    private int myAdapterPosition;
+    // loading indicator and the Bind call to mProgressBar
     @BindView(R.id.progressBar)
     ProgressBar mProgressBar;
     // binding the movieListRecyclerView to recyclerView View
@@ -94,6 +102,8 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     {
         // load the saved state for on rotation events and reloading, onStop
         super.onCreate(savedInstanceState);
+
+        mySavedBundle = savedInstanceState;
         // set layout for this view
         setContentView(R.layout.activity_main);
         // the call to ButterKnife to bind to this activity
@@ -106,72 +116,86 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         API_KEY = resources.getString(R.string.api_key);
         // sets the recycler view to a grid layout with 2 columns
         myAdapter = new MovieListAdapter(resultsList,getClickHandler());
+        // sets the number of columns dynamically
+         int columns = calculateNoOfColumns(mContext);
+        //  creates and instantiates a 2 column grid layout
+        myGridLayoutManager = new GridLayoutManager(this, columns);
         // set recycler view to a 2 column grid
-        movieListRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        movieListRecyclerView.setLayoutManager(myGridLayoutManager);
         // attach the adapter to the layout
         movieListRecyclerView.setAdapter(myAdapter);
-        // title/ supportBar string set to default popular
-        String titleBar = getString(R.string.themoviedb_sort_by_popular);
+        // checks is there is data available to reset the UI
+        // or load the default view
+        checkSavedInstanceState();
+    }
+    /*
+    *     checks is there is data available to reset the UI
+    *     or load the default view
+    */
+    public void checkSavedInstanceState() {
+        // creates a string to use to set the title bar to the correct name
+        String titleBar;
         // checks if the app has saved state data or not
-        if (savedInstanceState != null)
-        {
-            // if there is data saved for the previous state, restore the state of the UI;
-            // fetch the previous state
-            mySavedState = savedInstanceState.getString("sort_by");
+        if (mySavedBundle != null) {
+            // title/ supportBar string set to popular
+            titleBar = getString(R.string.themoviedb_sort_by_popular);
+            // if there is data saved for the previous state, restore the state of the UI
+            // the adapter position is stored as an int in saved state of the layout manager
+            myAdapterPosition = mySavedBundle.getInt("grid_layout_position");
+            // fetch the previous state string
+            mySavedState = mySavedBundle.getString("sort_by");
             // we need to set the title bar to the correct title
             // checks the sort by value and compares it to top rated
-            if(mySavedState.equals(getString(R.string.themoviedb_sort_by_top_rated)))
-            {
+            if (mySavedState.equals(getString(R.string.themoviedb_sort_by_top_rated))) {
                 // if the values are equal to top rated, set the title to top rated
                 titleBar = getString(R.string.title_top_rated_movies);
-                //sets the recycler view to the top rated list
-                getMovieJson(mySavedState);
+                //sets the recycler view to the top rated list and adapter position
+                getMovieJson(mySavedState, myAdapterPosition);
             }
 
             // if the values are not equal, set the title to popular
-            else if(mySavedState.equals(getString(R.string.themoviedb_sort_by_popular)))
-            {
+            else if (mySavedState.equals(getString(R.string.themoviedb_sort_by_popular))) {
                 titleBar = getString(R.string.title_popular_movies);
-                //sets the recycler view to the popular list
-                getMovieJson(mySavedState);
-            }
-            else if(mySavedState.equals(getString(R.string.themoviedb_sort_by_favorites)))
-            {
+                //sets the recycler view to the popular list and adapter position
+                getMovieJson(mySavedState, myAdapterPosition);
+            } else if (mySavedState.equals(getString(R.string.themoviedb_sort_by_favorites))) {
                 //sets title bar to favorites
                 titleBar = getString(R.string.title_favorites_movies);
-                //sets the recycler view to the favorites list
-                getFavorites();
+                //sets the recycler view to the favorites list and adapter position
+                getFavorites(myAdapterPosition);
             }
             // changes the title of the activity to match the type of movie list returned
             // default is popular movies
             Objects.requireNonNull(getSupportActionBar()).setTitle(titleBar);
-        }
-        else
-        {
-            // if there is no savedState data, get default value, sort by popular
+        } else {
+            //if saved instance state is null, on initial start
             mySavedState = getString(R.string.themoviedb_sort_by_popular);
-            // set the title to the default value 'popular'
+            titleBar = getString(R.string.title_popular_movies);
+            //sets the recycler view to the popular list
             Objects.requireNonNull(getSupportActionBar()).setTitle(titleBar);
-            // asks for the movieDb for popular
-            getMovieJson(mySavedState);
+            //sets the recycler view to the popular list and position 0
+            getMovieJson(mySavedState, 0);
         }
     }
-    /*
-     * this will get the favorites from the database and
-     * display them in the movies recycler view
-     */
-    private void getFavorites()
+   /*
+    * this will get the favorites from the database and
+    * display them in the movies recycler view
+   */
+    private void getFavorites(int position)
     {
-       // query the database for all favorites
-       Cursor myCursor = getContentResolver().query(MovieContract.MovieFavorites.CONTENT_URI, null,
+        // query the database for all favorites
+        Cursor myCursor = getContentResolver().query(MovieContract.MovieFavorites.CONTENT_URI, null,
              null, null,null);
         // initialize the favorites adapter to the new database cursor
         FavoritesListAdapter favAdapter = new FavoritesListAdapter(myCursor, getClickHandler(myCursor));
         // set the movie recycler view to a linear layout for the favorites list
         movieListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         // sets the movie recycler view data to the favorites list adapter with the cursor
-         movieListRecyclerView.setAdapter(favAdapter);
+        movieListRecyclerView.setAdapter(favAdapter);
+        // sets the recyclerView to the last viewed position if any
+        movieListRecyclerView.getLayoutManager().scrollToPosition(position);
     }
+    // needed to reference this on clickHandler
     private FavoritesListAdapter.FavoritesListAdapterOnClickHandler getClickHandler(Cursor cursor)
     {
      //returns this for the OnClickHandler
@@ -186,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     // gets the movie info and populates the gridView
     // based on the sort_by value
     // 2 options  Popular or Top Rated
-    private void getMovieJson(String sort_by)
+    private void getMovieJson(String sort_by, final int position)
     {
         // sets the saved state value to the sort by value
         mySavedState = sort_by;
@@ -209,12 +233,11 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                 // if Most Popular is selected in the options menu
                 case "popular":
                     // the retrofit call to retrieve the Popular movies
-                    client.getApiService().getPopularMovies(API_KEY).enqueue(new Callback<MovieListObject>()
+                    client.getApiService().getMovies("popular",API_KEY).enqueue(new Callback<MovieListObject>()
                     {
                         // the response of the popular movies call
                         @Override
-                        public void onResponse(@NonNull Call<MovieListObject> call, @NonNull Response<MovieListObject> response)
-                        {
+                        public void onResponse(@NonNull Call<MovieListObject> call, @NonNull Response<MovieListObject> response) {
                             // checks if the response is null
                             if (response.body() != null)
                             {
@@ -222,11 +245,13 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                                 showMovies();
                                 // loads the response into the resultsList
                                 resultsList = response.body().getResults();
-                                // set recycler view to a 2 column grid
-                                movieListRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));
-                                // adds the resultList to the RecyclerView
-                                movieListRecyclerView.setAdapter(new MovieListAdapter(resultsList, getClickHandler()));
                             }
+                            // set recycler view to a 2 column grid
+                            movieListRecyclerView.setLayoutManager(myGridLayoutManager);
+                            // sets the movie recycler view data to the popular list
+                            movieListRecyclerView.setAdapter(new MovieListAdapter(resultsList, getClickHandler()));
+                            // sets the the adapter position to the last viewed position if any
+                            movieListRecyclerView.getLayoutManager().scrollToPosition(position);
                         }
                         // if the call to theMovieDb should fail
                         @Override
@@ -240,23 +265,26 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                 // if Top Rated is selected in the options menu
                 case "top_rated":
                     // the retrofit call to retrieve the Top Rated movies
-                    client.getApiService().getTopRatedMovies(API_KEY).enqueue(new Callback<MovieListObject>()
+                    client.getApiService().getMovies(getString(R.string.themoviedb_sort_by_top_rated),API_KEY).enqueue(new Callback<MovieListObject>()
                     {
                         // response from the top rated movies call
                         @Override
                         public void onResponse(@NonNull Call<MovieListObject> call, @NonNull Response<MovieListObject> response)
                         {
                             // checks is there was a response
-                            if (response.body() != null) {
+                            if (response.body() != null)
+                            {
                                 // closes the loading indicator and shows the recyclerView
                                 showMovies();
                                 // loads the response into the resultsList
                                 resultsList = response.body().getResults();
-                                // set recycler view to a 2 column grid
-                                movieListRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));
-                                // adds the resultList to the RecyclerView
-                                movieListRecyclerView.setAdapter(new MovieListAdapter(resultsList, getClickHandler()));
                             }
+                            // set recycler view to a 2 column grid
+                            movieListRecyclerView.setLayoutManager(myGridLayoutManager);
+                            // sets the movie recycler view data to the top rated list
+                            movieListRecyclerView.setAdapter(new MovieListAdapter(resultsList, getClickHandler()));
+                            //sets the recyclerView to the last viewed position if there is one
+                            movieListRecyclerView.getLayoutManager().scrollToPosition(position);
                         }
                         // if the call to theMovieDb should fail
                         @Override
@@ -345,12 +373,12 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         // parse the menu item for which item was clicked,
         switch(id)
         {
-             // if the menu id was popular movies
+            // if the menu id was popular movies
            case R.id.popular_movies:
             // set title of the actionBar to popular movies
             getSupportActionBar().setTitle(R.string.title_popular_movies);
-            // makes the call that retrieves the resultsList of popular movie objects
-            getMovieJson(getString(R.string.themoviedb_sort_by_popular));
+            // makes the call that retrieves the resultsList of popular movie objects and sets position to 1
+            getMovieJson(getString(R.string.themoviedb_sort_by_popular),1);
             // saves the state of the app in the mySavedState value, popular
             mySavedState= getString(R.string.themoviedb_sort_by_popular);
             // returns done
@@ -359,8 +387,8 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
           case R.id.top_rated:
             // set title of the actionBar to top movies
             getSupportActionBar().setTitle(R.string.title_top_rated_movies);
-            // makes the call that retrieves the resultsList of top rated movie objects
-            getMovieJson(getString(R.string.themoviedb_sort_by_top_rated));
+            // makes the call that retrieves the resultsList of top rated movie objects and sets position to 1
+            getMovieJson(getString(R.string.themoviedb_sort_by_top_rated),1);
             // saves the state of the app in the mySavedState value, top rated
             mySavedState = getString(R.string.themoviedb_sort_by_top_rated);
             // returns done
@@ -369,8 +397,8 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
           case R.id.favorites:
             //set title of the actionBar to top movies
             getSupportActionBar().setTitle(R.string.title_favorites_movies);
-            //makes the call that retrieves the favorites movie list
-            getFavorites();
+            //makes the call that retrieves the favorites movie list and sets position to 1
+            getFavorites(1);
             // saves the state of the app in the mySavedState value, favorites list
             mySavedState = getString(R.string.themoviedb_sort_by_favorites);
             // returns done
@@ -406,7 +434,8 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     */
     @Override
     public void onSaveInstanceState(Bundle outState)
-    {
+    {    Log.v(LOG_TAG,"onSavedInstanceState is equal to: "+ myGridLayoutManager.findFirstVisibleItemPosition());
+        outState.putInt("grid_layout_position", myGridLayoutManager.findFirstVisibleItemPosition());
         // when app is saved, save the mySavedState as sort_by
         outState.putString("sort_by", mySavedState);
         // call superclass to save any view hierarchy
@@ -439,6 +468,19 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         intent.putExtra("movie", myMovie);
         //opens movieDetailActivity and sends the extra data
         startActivity(intent);
+    }
+/*
+* Code given from Udacity reviewer to scale columns in grid view dynamically
+*
+*/
+    public static int calculateNoOfColumns(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int scalingFactor = 200;
+        int noOfColumns = (int) (dpWidth / scalingFactor);
+        if(noOfColumns < 2)
+            noOfColumns = 2;
+        return noOfColumns;
     }
 }
 

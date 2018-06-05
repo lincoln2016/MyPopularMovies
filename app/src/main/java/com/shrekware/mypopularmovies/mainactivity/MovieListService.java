@@ -28,6 +28,7 @@ package com.shrekware.mypopularmovies.mainactivity;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /*
@@ -37,9 +38,19 @@ import retrofit2.http.Query;
 
 public interface MovieListService {
     //  builds the query part of the path for theMovieDB.org API call for popular movies
+/*
     @GET("/3/movie/popular")
     Call<MovieListObject> getPopularMovies(@Query("api_key") String api_key);
     //  builds the query part of the path for theMovieDB.org API call for top rated movies
     @GET("/3/movie/top_rated")
     Call<MovieListObject> getTopRatedMovies(@Query("api_key") String api_key);
+*/
+
+    //  builds the query part of the path for theMovieDB.org API call
+    // for popular or top rated depending on what is sent in the call
+
+    @GET("/3/movie/{sort_by}")
+    Call<MovieListObject> getMovies(@Path("sort_by") String sortBy, @Query("api_key") String api_Key);
+
+
 }

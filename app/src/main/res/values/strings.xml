@@ -55,7 +55,7 @@
         version 2.0\n\n
         Copyright  2018 Henry Ayers.\n
         All rights reserved.\n\n
-        MyPopularMovie uses themoviedb.org API for all movie data,
+        This product uses the TMDb API but is not endorsed or certified by TMDb.
         for more information,\n contact henry@shrekware.com\n</string>
     <string name="logo_powered_by_www_themoviedb_org">Powered by www.themoviedb.org</string>
     <!--  the MovieDB api key test value, it tests if you changed the api key

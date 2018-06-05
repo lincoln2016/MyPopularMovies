@@ -49,10 +49,10 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="dogEared" value="true" />
-                                      <entry key="iconShape" value="VRECT" />
-                                      <entry key="imageAsset" value="C:\Users\henry\Downloads\Now Loading.png" />
-                                      <entry key="outputName" value="loading_please_wait" />
+                                      <entry key="cropped" value="true" />
+                                      <entry key="iconShape" value="CIRCLE" />
+                                      <entry key="imageAsset" value="C:\Users\henry\Desktop\pictures\movieDB.png" />
+                                      <entry key="outputName" value="new_movie_db" />
                                     </map>
                                   </option>
                                 </PersistentState>
