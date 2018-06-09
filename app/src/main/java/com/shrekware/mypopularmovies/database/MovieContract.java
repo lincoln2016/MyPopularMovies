@@ -61,5 +61,6 @@ public class MovieContract
         public static final String cPOSTER = "POSTERPATH";
         public static final String cRELEASE_DATE = "RELEASE_DATE";
         public static final String cVOTE_AVERAGE = "VOTE_AVERAGE";
+        public static final String cBACKDROP_PATH = "BACKDROP_PATH";
     }
 }

@@ -145,7 +145,7 @@ public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdap
         // sets the favorites vote Average textView to the string voteAverage
         tv_favVoteAverage.setText(voteAverage);
         // initializes and sets a string to the movie release date movie row column 5/release date
-        String releaseDate = "Release Date: " + myCursor.getString(5);
+        String releaseDate = context.getString(R.string.release_date_favoritesListAdapter) + myCursor.getString(5);
         // sets the favorites release date text view to the string release date
         tv_favReleaseDate.setText(releaseDate);
         //you will need a ‘size’, which will be one of the following:

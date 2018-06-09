@@ -38,7 +38,7 @@ class MovieDataBaseHelper extends SQLiteOpenHelper
     //// name of database
     private static final String DB_NAME = MovieContract.MovieFavorites.cDATABASE_NAME;
     //  database version
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 3;
     // create database table string - column names
     private static final String CREATE_FAVORITE = "CREATE TABLE " +
             MovieContract.MovieFavorites.cTABLE_NAME + "(" +
@@ -48,7 +48,8 @@ class MovieDataBaseHelper extends SQLiteOpenHelper
             MovieContract.MovieFavorites.cOVERVIEW + " TEXT," +
             MovieContract.MovieFavorites.cPOSTER + " TEXT," +
             MovieContract.MovieFavorites.cRELEASE_DATE + " TEXT," +
-            MovieContract.MovieFavorites.cVOTE_AVERAGE + " REAL );";
+            MovieContract.MovieFavorites.cVOTE_AVERAGE + " REAL,"+
+            MovieContract.MovieFavorites.cBACKDROP_PATH + " TEXT);";
     /*
     * Movie Database constructor
     */

@@ -34,84 +34,72 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@android:color/white"
+    android:background="@android:color/white">
 
-    >
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:weightSum="3">
-
-
-
-    <ImageView
-        android:contentDescription="@string/title_favorites_movies"
-        android:layout_marginTop="4dp"
-        android:layout_marginStart="4dp"
-        android:id="@+id/favorites_imageView"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:adjustViewBounds="true"
-        app:srcCompat="@mipmap/loading_please_wait"
-        android:layout_weight="1"/>
-
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_weight="2"
-        >
-
-        <TextView
-            android:id="@+id/tv_favorites_title"
-            android:layout_marginStart="4dp"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:textColor="@color/colorPrimary"
-            android:layout_marginStart="10dp"
-            android:id="@+id/tv_favorites_release_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-        />
-        <TextView
-            android:textColor="@color/colorPrimary"
-            android:layout_marginStart="6dp"
-            android:id="@+id/tv_favorites_overview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:lines="4"
-            android:ellipsize="end"
-            android:isScrollContainer="true"
-            />
-
-        <TextView
-            android:textColor="@android:color/holo_red_dark"
-            android:id="@+id/tv_favorites_vote_average"
-            android:layout_marginStart="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-
-
-    </LinearLayout>
-
-</LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="2"
-        >
-        <ImageButton
+        android:weightSum="3">
 
+        <ImageView
+            android:contentDescription="@string/title_favorites_movies"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="4dp"
+            android:id="@+id/favorites_imageView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            app:srcCompat="@mipmap/loading_please_wait"
+            android:layout_weight="1"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="2">
+
+            <TextView
+                android:id="@+id/tv_favorites_title"
+                android:layout_marginStart="4dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:textColor="@color/colorPrimary"
+                android:layout_marginStart="10dp"
+                android:id="@+id/tv_favorites_release_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:textColor="@color/colorPrimary"
+                android:layout_marginStart="6dp"
+                android:id="@+id/tv_favorites_overview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lines="4"
+                android:ellipsize="end"
+                android:isScrollContainer="true" />
+
+            <TextView
+                android:textColor="@android:color/holo_red_dark"
+                android:id="@+id/tv_favorites_vote_average"
+                android:layout_marginStart="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <ImageButton
             android:contentDescription="@string/title_favorites_movies"
             android:id="@+id/favorites_imageButton"
             android:layout_width="0dp"
@@ -126,8 +114,7 @@
             android:layout_height="wrap_content"
             android:text="@string/more_button_favorites_list"
             android:layout_weight="1"
-            android:backgroundTint="@android:color/holo_orange_light"
-            />
-    </LinearLayout>
+            android:backgroundTint="@android:color/holo_orange_light" />
 
+    </LinearLayout>
 </LinearLayout>

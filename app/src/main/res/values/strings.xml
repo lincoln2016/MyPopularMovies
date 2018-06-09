@@ -32,7 +32,6 @@
     <!--  activity support action bar                 -->
     <string name="title_popular_movies">Popular Movies</string>
     <string name="title_top_rated_movies">Top Rated Movies</string>
-    <string name="title_movie_details">Movie Details</string>
     <!--  the calls to the movie db          -->
     <string name="themoviedb_sort_by_popular">popular</string>
     <string name="themoviedb_sort_by_top_rated">top_rated</string>
@@ -69,7 +68,6 @@
     <string name="movie_trailer_type">Type: </string>
     <string name="youtube_image_url_beginning">https://img.youtube.com/vi/</string>
     <string name="trailer_image_size_end">/mqdefault.jpg</string>
-    <string name="database_unavailable_toast_movie_detail">Database unavailable, try again</string>
     <string name="title_favorites_movies">Favorites</string>
     <string name="add_movie_to_favorites_toast_movie_detail">added movie to favorites list</string>
     <string name="we_dont_have_permission">Sorry, we don\'t have permission to share the movie image</string>
@@ -80,5 +78,7 @@
     <string name="more_button_favorites_list">More</string>
     <string name="share_button_content_description">share button</string>
     <string name="add_to_favorites_button_content_description">add to favorites button</string>
+    <string name="my_trailer_site_heading">Site:</string>
+    <string name="release_date_favoritesListAdapter">Release Date:</string>
 
 </resources>

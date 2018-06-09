@@ -84,14 +84,25 @@ public class MovieTrailersAdapter extends RecyclerView.Adapter<MovieTrailersAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position)
     {
+        // initializes image to the layout image view
         image = holder.itemView.findViewById(R.id.imageView_movie_trailer);
         trailerName = holder.itemView.findViewById(R.id.tv_trailer_title);
         trailerType = holder.itemView.findViewById(R.id.tv_trailer_type);
+        TextView trailerSite = holder.itemView.findViewById(R.id.tv_trailer_site);
+        TextView trailerSize = holder.itemView.findViewById(R.id.tv_trailer_size);
         MovieTrailerObject myTrailer = myListOfTrailers.get(position);
         trailerName.setText(myTrailer.getName());
         //string for the trailer type name and then type
-        String myType = context.getResources().getString(R.string.movie_trailer_type)+myTrailer.getType();
+        String myType = context.getResources().getString(R.string.movie_trailer_type)+" "+myTrailer.getType();
+        // sets the trailer type to the textView
         trailerType.setText(myType);
+        //creates string to set the trailer size text to
+        String myTrailerSize = myTrailer.getSize().toString() +"p";
+        // sets the trailer size to the textView
+        trailerSize.setText(myTrailerSize);
+        String myTrailerSite = context.getString(R.string.my_trailer_site_heading)+" "+myTrailer.getSite();
+        // sets the trailer site to the textView
+        trailerSite.setText(myTrailerSite);
         String youTube =context.getString(R.string.youtube_image_url_beginning)+myTrailer.getKey()+context.getString(R.string.trailer_image_size_end);
         Picasso.get().load(youTube).placeholder(R.mipmap.loading_please_wait).into(image);
     }

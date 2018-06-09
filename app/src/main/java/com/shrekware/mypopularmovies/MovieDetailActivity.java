@@ -43,10 +43,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -54,6 +54,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -68,7 +69,6 @@ import com.shrekware.mypopularmovies.moviedetailactivity.MovieTrailersAdapter;
 import com.shrekware.mypopularmovies.moviedetailactivity.RetrofitMovieDetailsClient;
 import com.squareup.picasso.Picasso;
 import java.util.List;
-import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -78,6 +78,9 @@ import retrofit2.Response;
 public class MovieDetailActivity extends AppCompatActivity implements
         MovieTrailersAdapter.MovieTrailersAdapterOnClickHandler
 {
+
+
+
     // tag for log messages
     private final static String LOG_TAG = MovieDetailActivity.class.getSimpleName();
     // the api key from theMovieDB, it can be found in the values/strings.xml file
@@ -94,7 +97,14 @@ public class MovieDetailActivity extends AppCompatActivity implements
     private MovieReviewListObject reviewListObject;
     // gets a reference to the activity that can be passed to the innerclass
     private final Context thisActivity = this;
+    //toolbar object
+    private android.support.v7.widget.Toolbar toolbar;
     // binds the imageView to the movie_detail image
+    @BindView(R.id.image_background_poster)
+    ImageView myBackGroundImage;
+    //loading indicator
+    @BindView(R.id.progressBar_movie_trailers)
+    ProgressBar mProgressBar;
     @BindView(R.id.image_movie_detail)
     ImageView image;
     // a rating bar with 10 stars to show the vote average
@@ -134,6 +144,8 @@ public class MovieDetailActivity extends AppCompatActivity implements
     // remove from favorites button
     @BindView(R.id.btn_not_favorite)
     ImageButton btn_notFavorite;
+    // the collapsing toolbar
+
     /*
     *  called when activity is created
     */
@@ -144,7 +156,7 @@ public class MovieDetailActivity extends AppCompatActivity implements
         // the default create
         super.onCreate(savedInstanceState);
         // sets the UI view to the activity movie detail layout
-        setContentView(R.layout.activity_movie_detail);
+        setContentView(R.layout.activity_movie_detail_collapsing);
         // calls ButterKnife to bind the views
         ButterKnife.bind(this);
         // gets a reference to app context
@@ -153,17 +165,17 @@ public class MovieDetailActivity extends AppCompatActivity implements
         API_KEY = getString(R.string.api_key);
         // retrieves the intent and its packaged data, used to display the movie
         Intent intent = getIntent();
+        //gets a reference to the layout toolbar
+        toolbar = findViewById(R.id.toolbar);
         // retrieves the attached movie object
         movie = intent.getParcelableExtra("movie");
-        // set title on support bar to Movie Details
-        Objects.requireNonNull(getSupportActionBar()).setTitle(movie.getTitle());
         // string to add vote average to heading end
         String averageRating = getString(R.string.average_user_rating)+": "+movie.getVoteAverage().toString();
         // setting the userRating textView to the title and vote average
         userRatingText.setText(averageRating);
         // sets the layout manager to a Grid layout on that scrolls horizontally
-        movieTrailersRecyclerView.setLayoutManager(new GridLayoutManager(this, 1, LinearLayoutManager.HORIZONTAL, false));
-        //alternate layout vertical   // sets the layout manager to a linear layout on this activity
+        movieTrailersRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        //alternate vertical layout below  - sets the layout manager to a linear layout on this activity
        //   movieTrailersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         // instantiates a new instance of the Movie trailers adapter class
         MovieTrailersAdapter movieTrailersAdapter = new MovieTrailersAdapter(trailersList, null);
@@ -175,10 +187,10 @@ public class MovieDetailActivity extends AppCompatActivity implements
         movieReviewsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         // sets the review recycler view to the review adapter
         movieReviewsRecyclerView.setAdapter(mReviewAdapter);
+        // sets the collapsing toolbar image and home button
+        setToolbarImage();
         // sets the rating stars value
         setStars();
-        // gets the poster path and displays image in layout
-        setImage();
         // sets the movie title
         movieTitle.setText(movie.getTitle());
         // sets the movie description
@@ -220,8 +232,9 @@ public class MovieDetailActivity extends AppCompatActivity implements
                 myContent.put(MovieContract.MovieFavorites.cTITLE, movie.getTitle());
                 // adds the movie overview/description to the content values
                 myContent.put(MovieContract.MovieFavorites.cOVERVIEW, movie.getOverview());
-                // adds the movie poster path to the content values
                 myContent.put(MovieContract.MovieFavorites.cPOSTER,movie.getPosterPath());
+                // adds the movie poster path to the content values
+                myContent.put(MovieContract.MovieFavorites.cBACKDROP_PATH,movie.getBackdropPath());
                 // adds the movie release date to the content values
                 myContent.put(MovieContract.MovieFavorites.cRELEASE_DATE,movie.getReleaseDate());
                 // adds the movie vote average to the content values
@@ -257,6 +270,7 @@ public class MovieDetailActivity extends AppCompatActivity implements
                 }
                 else
                 {
+                    // show a toast messages stating no internet
                     Toast.makeText(thisActivity, R.string.toast_no_internet_access,Toast.LENGTH_LONG).show();
                 }
             }
@@ -282,18 +296,19 @@ public class MovieDetailActivity extends AppCompatActivity implements
                 Uri uri = MovieContract.MovieFavorites.CONTENT_URI;
                 // deletes the movie id from the database with the content resolver
                 getContentResolver().delete(uri,"MOVIE_ID = ?", new String[]{String.valueOf(movieId)});
-
             }
         });
-
     }
+
     // shows favorite star after clicking add button
-    public void showFavoriteButton() {
+    private void showFavoriteButton()
+    {
         // when clicked, favorite button made visible
         btnFavorite.setVisibility(View.VISIBLE);
         // the add favorite button hidden
         btn_notFavorite.setVisibility(View.GONE);
     }
+
     /*
     * used to share a movie trailer with email,
     * text or an app available to send a message
@@ -313,12 +328,14 @@ public class MovieDetailActivity extends AppCompatActivity implements
                 getPermission();
             }
     }
+
     //  checks if the permission to save the picture is given
     private void getPermission()
     {       // requests the permission to write to external storage
             ActivityCompat.requestPermissions((Activity) thisActivity,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},2);
     }
+
     // checks for request permission response, shows toast if denied
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
@@ -345,6 +362,7 @@ public class MovieDetailActivity extends AppCompatActivity implements
              super.onRequestPermissionsResult(requestCode,permissions,grantResults);
          }
     }
+
     /*
     *  the method to share the move and a trailer with a friend
     */
@@ -353,7 +371,7 @@ public class MovieDetailActivity extends AppCompatActivity implements
         // string for the saved image description
         String myTitle = movie.getTitle();
         // get the image from the MovieDetailActivity ImageView
-        Drawable mDrawable = image.getDrawable();
+        Drawable mDrawable = myBackGroundImage.getDrawable();
         // convert the drawable to Bitmap, needed to save the file
         Bitmap mBitmap = ((BitmapDrawable) mDrawable).getBitmap();
         // create a string for the path to the saved file,
@@ -383,11 +401,12 @@ public class MovieDetailActivity extends AppCompatActivity implements
             startActivity(intent);
         }
     }
+
     /*
     * the method that fetches the movie trailers using retrofit
     */
     private void getMovieTrailers()
-    {
+    {    showLoading();
         //checks if the list of movie trailer objects exists
         if (trailersList != null)
         {
@@ -407,7 +426,7 @@ public class MovieDetailActivity extends AppCompatActivity implements
                 public void onResponse(@NonNull Call<MovieTrailerListObject> call, @NonNull Response<MovieTrailerListObject> response)
                 {    // checks if there is a response
                     if (response.body() != null)
-                    {
+                    {   showTrailers();
                         // loads the response into the resultsList
                         trailersList = response.body().getResults();
                         //adds the resultList to the RecyclerView and adds an onClickHandler
@@ -425,6 +444,7 @@ public class MovieDetailActivity extends AppCompatActivity implements
             });
         }
     }
+
     /*
      * the method that fetches the movie reviews using retrofit
      */
@@ -474,22 +494,37 @@ public class MovieDetailActivity extends AppCompatActivity implements
             });
         }
     }
-   /*
-    * used to fetch image and show it in the imageView
-   */
-    private void setImage()
+
+    /*
+    *   used to fetch image and show it in the scrolling imageView
+    */
+    private void setToolbarImage()
     {
+        // needed to add home/back button to the collapsing toolbar
+        setSupportActionBar(toolbar);
+        // adds the home/up/back button to the collapsing toolbar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //initializes the collapsing toolbar tto the layout toolbar
+        CollapsingToolbarLayout myCollapsingToolbarLayout = findViewById(R.id.toolbar_layout);
+        // allows the title to be placed on the collapsing toolbar
+        myCollapsingToolbarLayout.setTitleEnabled(true);
+        //sets the title on the collapsing toolbar to the movie title
+        myCollapsingToolbarLayout.setTitle(movie.getTitle());
         // string to get the poster path from the movie object
-        String Poster = movie.getPosterPath();
+        String Poster = movie.getBackdropPath();
         // you will need a ‘size’, which will be one of the following:
         // "w92", "w154", "w185", "w342", "w500", "w780",
         // or "original". For most phones we recommend using “w185”
         final String imageSize = getString(R.string.themoviedb_image_size);
+        Log.v(LOG_TAG,"backdrop path: "+ Poster);
         //the complete poster path for Picasso to use
         final String PosterPath = getString(R.string.themoviedb_base_image_url) + imageSize + Poster;
+       // Picasso.get().load(PosterPath).fetch();
         //ask Picasso to do the heavy lifting, getting the pictures and load them into image
-        Picasso.get().load(PosterPath).placeholder(R.mipmap.loading_please_wait).fit().into(image);
+        Picasso.get().load(PosterPath).fit().into(myBackGroundImage);
+
     }
+
     /*
      * used to set the rating stars to the correct amount
     */
@@ -502,6 +537,7 @@ public class MovieDetailActivity extends AppCompatActivity implements
         // here is done in the activity_movie_detail.xml file
         ratingBar.setRating((float) rating);
     }
+
     /*
      * used to set the Review Title Bar
      * and the number of reviews with the proper syntax
@@ -551,6 +587,7 @@ public class MovieDetailActivity extends AppCompatActivity implements
             numberReviews.setText(numberOfReviewsString);
         }
     }
+
      //this is for the home button action to go
      // back to the previous activity results
      // and not restart the main activity
@@ -560,8 +597,10 @@ public class MovieDetailActivity extends AppCompatActivity implements
         //this is only needed if you have specific things
         //that you want to do when the user presses the back button.
         /* your specific things...*/
+
         super.onBackPressed();
     }
+
     //adding activity to the manifest adds the home/back arrow
      // we add the selection of the home button to simulate the back button
     @Override
@@ -579,12 +618,14 @@ public class MovieDetailActivity extends AppCompatActivity implements
         //if no known items are selected it runs its default behavior
         return super.onOptionsItemSelected(item);
     }
+
      // needed to reference the on clickHandler
     private MovieTrailersAdapter.MovieTrailersAdapterOnClickHandler getTrailersClickHandler()
     {
         //returns this for the OnClickHandler
         return this;
     }
+
     /*
      *  when a trailer is clicked, opens youtube or a browser to view trailer
      */
@@ -609,6 +650,7 @@ public class MovieDetailActivity extends AppCompatActivity implements
 
 
     }
+
     /*
     *  queries the favorites database to check whether the movie
     *  is in the database
@@ -617,10 +659,10 @@ public class MovieDetailActivity extends AppCompatActivity implements
     {
         // gets a local movie id instance to use in the query
         int movieID = favMovie.getId();
-        // creates a true/false variable to return the query results
-        boolean isFav = true;
         // grabs the row of movie favorites that match the movie id
-        Cursor myCursor = getContentResolver().query(MovieContract.MovieFavorites.CONTENT_URI,
+        Cursor myCursor = getContentResolver()
+                .query(
+                MovieContract.MovieFavorites.CONTENT_URI,
                 null,
                 "MOVIE_ID = ?",
                 new String[]{String.valueOf(movieID)},
@@ -637,12 +679,13 @@ public class MovieDetailActivity extends AppCompatActivity implements
         //close the cursor
         myCursor.close();
         // if no match found return false
-        return !isFav;
+        return false;
     }
+
     /*
      *  used to check if the phone has internet access
      */
-    public boolean getInternetStatus()
+    private boolean getInternetStatus()
     {
         // opens a dialog to the phone about its connection to the network
         ConnectivityManager connectivityManager =
@@ -659,14 +702,35 @@ public class MovieDetailActivity extends AppCompatActivity implements
         // does not test internet access, it could be blocked!, but not likely...
         return (networkInfo != null && networkInfo.isConnected());
     }
+
     /* Checks if external storage is available for read and write
     *  used in share movie intent
     */
-    public boolean isExternalStorageWritable()
+    private boolean isExternalStorageWritable()
     {
         // initializes a string to the state of the external storage drive, present or not
         String state = Environment.getExternalStorageState();
         // returns whether there is media mounted or not
         return Environment.MEDIA_MOUNTED.equals(state);
     }
+
+    // shows loading indicator
+    private void showLoading()
+    {
+        // show the loading indicator
+        mProgressBar.setVisibility(View.VISIBLE);
+        // hide the movie list
+        movieTrailersRecyclerView.setVisibility(View.GONE);
+    }
+
+    // shows loading indicator
+    private void showTrailers()
+    {
+        // show the loading indicator
+        mProgressBar.setVisibility(View.GONE);
+        // hide the movie list
+        movieTrailersRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+
 }

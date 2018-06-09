@@ -20,20 +20,21 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".MovieDetailActivity"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
+        <!-- android:theme="@style/AppTheme" -->
 
-        <!-- Movie ContentProvider -->
+    <!-- Movie ContentProvider -->
         <provider
             android:name=".database.MovieProvider"
             android:authorities="com.shrekware.mypopularmovies.database"
             android:exported="false" />
-
     </application>
 
 </manifest>

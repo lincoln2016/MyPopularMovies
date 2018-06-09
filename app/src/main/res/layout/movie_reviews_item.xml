@@ -41,11 +41,8 @@
         android:textSize="16sp"
         android:layout_marginBottom="6dp"
         android:textColor="@color/colorPrimaryDark"/>
-
-
     <!-- textView for the review used in the recyclerView for the Movie Detail Activity
           Review RecyclerView -->
-
     <TextView
         android:layout_marginStart="30dp"
         android:layout_marginEnd="12dp"
@@ -53,21 +50,12 @@
         android:id="@+id/tv_review_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimary"
-        />
-
-
-
-
-
+        android:textColor="@color/colorPrimary" />
     <View
-
         android:background="@color/movie_detail_titles_color"
         android:layout_height="1dp"
         android:layout_width="match_parent"
         android:layout_marginBottom="4dp"
-        android:layout_margin="4dp"
-        />
-
+        android:layout_margin="4dp" />
 
 </LinearLayout>

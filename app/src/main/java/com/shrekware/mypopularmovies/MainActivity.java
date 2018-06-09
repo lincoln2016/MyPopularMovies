@@ -34,7 +34,6 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -42,7 +41,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.LogPrinter;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -82,14 +80,11 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     // string for savedInstanceState data, defines either
     // popular or top rated as the state of the activity
     private String mySavedState;
-    // MovieListAdapter create
-    private MovieListAdapter myAdapter;
 
     private Bundle mySavedBundle;
     // create a reference to the spinner used to indicate loading
     private GridLayoutManager myGridLayoutManager;
 
-    private int myAdapterPosition;
     // loading indicator and the Bind call to mProgressBar
     @BindView(R.id.progressBar)
     ProgressBar mProgressBar;
@@ -115,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         // the api key you get from theMovieDB to access their api
         API_KEY = resources.getString(R.string.api_key);
         // sets the recycler view to a grid layout with 2 columns
-        myAdapter = new MovieListAdapter(resultsList,getClickHandler());
+        MovieListAdapter myAdapter = new MovieListAdapter(resultsList, getClickHandler());
         // sets the number of columns dynamically
          int columns = calculateNoOfColumns(mContext);
         //  creates and instantiates a 2 column grid layout
@@ -132,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     *     checks is there is data available to reset the UI
     *     or load the default view
     */
-    public void checkSavedInstanceState() {
+    private void checkSavedInstanceState() {
         // creates a string to use to set the title bar to the correct name
         String titleBar;
         // checks if the app has saved state data or not
@@ -141,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
             titleBar = getString(R.string.themoviedb_sort_by_popular);
             // if there is data saved for the previous state, restore the state of the UI
             // the adapter position is stored as an int in saved state of the layout manager
-            myAdapterPosition = mySavedBundle.getInt("grid_layout_position");
+            int myAdapterPosition = mySavedBundle.getInt("grid_layout_position");
             // fetch the previous state string
             mySavedState = mySavedBundle.getString("sort_by");
             // we need to set the title bar to the correct title
@@ -330,7 +325,8 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     }
 
     //shows movies, hides the loading indicator
-    private void showMovies() {
+    private void showMovies()
+    {
         // hide the loading indicator
         mProgressBar.setVisibility(View.GONE);
         // show the movie list
@@ -338,7 +334,8 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
     }
 
     //checks the device to see if there is a network connection
-    private boolean getInternetStatus() {
+    private boolean getInternetStatus()
+    {
         // opens a dialog to the phone about its connection to the network
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -364,6 +361,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         // Return true so that the menu is displayed in the Toolbar
         return true;
     }
+
     // directs the menu item clicks
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
@@ -417,6 +415,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
        // the default behaviour
         return super.onOptionsItemSelected(item);
     }
+
     // when a movie is clicked, opens Movie Detail Activity
     @Override
     public void onClick(MovieObject movie)
@@ -428,6 +427,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         //opens movieDetailActivity and sends the extra data
         startActivity(intent);
     }
+
     /*
     *   called when the activity is stopped or destroyed,
     *   save your data here, to restore in onCreate
@@ -442,6 +442,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         super.onSaveInstanceState(outState);
     }
     // when a favorite movie More Details is clicked,  it opens Movie Detail Activity
+
     @Override
     public void onClick(Cursor cursor)
     {
@@ -457,7 +458,7 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
                 "en-us",
                 "",
                 null,
-                cursor.getString(4),
+                cursor.getString(7),
                 false,
                 cursor.getString(3),
                 cursor.getString(5));
@@ -465,21 +466,32 @@ public class MainActivity extends AppCompatActivity implements MovieListAdapter.
         // creates an intent that will open a Movie Detail Activity
         Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
         // adds the movie object to the intent as a parcelable movie object
+        Log.v(LOG_TAG,"backdropPath: "+ cursor.getString(7));
         intent.putExtra("movie", myMovie);
         //opens movieDetailActivity and sends the extra data
         startActivity(intent);
     }
+
 /*
-* Code given from Udacity reviewer to scale columns in grid view dynamically
-*
+*   Code given from Udacity reviewer to scale columns in grid view dynamically
+*   works great, the scaling factor of 200 is how it determines how many columns,
+*   smaller number more columns
 */
-    public static int calculateNoOfColumns(Context context) {
+    private static int calculateNoOfColumns(Context context)
+    {
+        // creates and initializes a display variable
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        // creates a float to hold how wide the phone screen is
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        // constant for the column scale size
         int scalingFactor = 200;
+        // figures out how many columns at 200dp can fit on the phone
         int noOfColumns = (int) (dpWidth / scalingFactor);
+        // if there is not enough room for 2, show 2 anyway
         if(noOfColumns < 2)
+            // sets columns to 2
             noOfColumns = 2;
+        // returns the number of columns to display
         return noOfColumns;
     }
 }
